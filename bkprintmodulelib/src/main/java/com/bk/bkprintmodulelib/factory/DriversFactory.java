@@ -1,9 +1,12 @@
 package com.bk.bkprintmodulelib.factory;
 
+import android.content.Context;
 import android.util.SparseArray;
 
+import com.bk.bkprintmodulelib.anotation.AnotationPrinterType;
 import com.bk.bkprintmodulelib.cosntants.PekonPrinterType;
 import com.bk.bkprintmodulelib.print_help.IPrinter;
+import com.bk.bkprintmodulelib.print_help.SharedPrefUtil;
 import com.bk.bkprintmodulelib.printer.bluetooth.BluetoothPrinter;
 import com.bk.bkprintmodulelib.printer.parter.PartnerPrinter;
 import com.bk.bkprintmodulelib.printer.startwifi.StartWIFIPrinter;
@@ -21,83 +24,74 @@ public class DriversFactory extends AbsDriversFactory {
     private boolean openMultiPrinter = false;
 
 
-    private String openPrinter = PekonPrinterType.PRINTER_WIFI + "&&" + PekonPrinterType.PRINTER_SUMMI;
-
     @Override
-    public SparseArray<IPrinter> getPekonPrinter() {
+    public SparseArray<IPrinter> getPekonPrinter(Context context) {
         SparseArray<IPrinter> printers = new SparseArray<>();
 
-        if (!openMultiPrinter) {
-//            IPrinter iPrinter = new BluetoothPrinter();
-            IPrinter iPrinter = new SummiPrinter();
-//            IPrinter iPrinter = new USBParallelPortPrinter();
-//            IPrinter iPrinter = new WIFIPrinter();
-//            IPrinter iPrinter = new StartWIFIPrinter();
-//            IPrinter iPrinter = new USBSerialport();
-//            IPrinter iPrinter = new PartnerPrinter();
-            printers.put(PekonPrinterType.PRINTER_SUMMI,iPrinter);
-        } else {
-            getMultiPrinter(printers);
-        }
+        int mainPrinter = SharedPrefUtil.getInstance().getMainPrinter(context);
+        getPrinter(printers, mainPrinter);
 
+        if (openMultiPrinter) {
+            mainPrinter = SharedPrefUtil.getInstance().getHelpPrinter(context);
+            getPrinter(printers, mainPrinter);
+        }
         return printers;
     }
 
     /**
      * 一次获取多打印集合
+     *
      * @param printers
      */
-    private void getMultiPrinter(SparseArray<IPrinter> printers) {
-        String[] split = openPrinter.split("&&");
-        for (int i = split.length - 1; i >= 0; i--) {
+    private void getPrinter(SparseArray<IPrinter> printers, @AnotationPrinterType int printerType) {
 
-            switch (Integer.valueOf(split[i])) {
-                case PekonPrinterType.PRINTER_WIFI: {
-                    IPrinter iPrinter  = new StartWIFIPrinter();
-                    printers.put(PekonPrinterType.PRINTER_WIFI, iPrinter);
-                    break;
-                }
-                case PekonPrinterType.BLUETOOTH: {
-                    IPrinter iPrinter  = new BluetoothPrinter();
-                    printers.put(PekonPrinterType.BLUETOOTH, iPrinter);
-                    break;
-                }
 
-                case PekonPrinterType.PRINTER_SUMMI: {
-                    IPrinter iPrinter  = new SummiPrinter();
-                    printers.put(PekonPrinterType.PRINTER_SUMMI, iPrinter);
-                    break;
-                }
-                case PekonPrinterType.PRINTER_USB_SERIAL: {
-                    IPrinter iPrinter  = new USBSerialport();
-                    printers.put(PekonPrinterType.PRINTER_USB_SERIAL, iPrinter);
-                    break;
-                }
-                case PekonPrinterType.PRINTER_USB_PARALLEL: {
-                    IPrinter iPrinter  = new USBParallelPortPrinter();
-                    printers.put(PekonPrinterType.PRINTER_USB_PARALLEL, iPrinter);
-                    break;
-                }
-                case PekonPrinterType.PRINTER_LDPRINT: {
-                    break;
-                }
-                case PekonPrinterType.PRINTER_BLUETOOTH_BOX: {
-                    break;
-                }
-                case PekonPrinterType.PRINTER_PARTNERPRINT: {
-                    IPrinter iPrinter  = new PartnerPrinter();
-                    printers.put(PekonPrinterType.PRINTER_PARTNERPRINT, iPrinter);
-                    break;
-                }
-                case PekonPrinterType.PRINTER_USB: {
-                    IPrinter iPrinter  = new USBPrinter();
-                    printers.put(PekonPrinterType.PRINTER_USB, iPrinter);
-                    break;
-                }
+        switch (printerType) {
+            case PekonPrinterType.PRINTER_WIFI: {
+                IPrinter iPrinter = new StartWIFIPrinter();
+                printers.put(PekonPrinterType.PRINTER_WIFI, iPrinter);
+                break;
+            }
+            case PekonPrinterType.BLUETOOTH: {
+                IPrinter iPrinter = new BluetoothPrinter();
+                printers.put(PekonPrinterType.BLUETOOTH, iPrinter);
+                break;
+            }
 
-                case PekonPrinterType.PRINTER_MS_WIFI: {
-                    break;
-                }
+            case PekonPrinterType.PRINTER_SUMMI: {
+                IPrinter iPrinter = new SummiPrinter();
+                printers.put(PekonPrinterType.PRINTER_SUMMI, iPrinter);
+                break;
+            }
+            case PekonPrinterType.PRINTER_USB_SERIAL: {
+                IPrinter iPrinter = new USBSerialport();
+                printers.put(PekonPrinterType.PRINTER_USB_SERIAL, iPrinter);
+                break;
+            }
+            case PekonPrinterType.PRINTER_USB_PARALLEL: {
+                IPrinter iPrinter = new USBParallelPortPrinter();
+                printers.put(PekonPrinterType.PRINTER_USB_PARALLEL, iPrinter);
+                break;
+            }
+            case PekonPrinterType.PRINTER_LDPRINT: {
+                break;
+            }
+            case PekonPrinterType.PRINTER_BLUETOOTH_BOX: {
+                break;
+            }
+            case PekonPrinterType.PRINTER_PARTNERPRINT: {
+                IPrinter iPrinter = new PartnerPrinter();
+                printers.put(PekonPrinterType.PRINTER_PARTNERPRINT, iPrinter);
+                break;
+            }
+            case PekonPrinterType.PRINTER_USB: {
+                IPrinter iPrinter = new USBPrinter();
+                printers.put(PekonPrinterType.PRINTER_USB, iPrinter);
+                break;
+            }
+
+            case PekonPrinterType.PRINTER_MS_WIFI: {
+                break;
             }
 
         }

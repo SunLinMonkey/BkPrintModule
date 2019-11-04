@@ -95,7 +95,7 @@ public class BluetoothDeviceListDialog extends Dialog {
             String address = info.substring(info.length() - 17);
             String name = info.substring(0, info.length() - 17);
             System.out.println("name:" + name);
-            SharedPrefUtil.getInstance(context).setCurrentBluetoothDevice(address, context);
+            SharedPrefUtil.getInstance().setCurrentBluetoothDevice(address, context);
             returnToPreviousActivity(address, false, name);
         }
     };

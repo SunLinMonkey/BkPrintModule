@@ -1,5 +1,6 @@
 package com.bk.bkprintmodulelib;
 
+import android.app.Application;
 import android.content.Context;
 import android.util.Log;
 import android.util.SparseArray;
@@ -32,8 +33,12 @@ public class PrinterManager {
     DataChannel channel;
 
     private PrinterManager() {
+
+    }
+
+    public void init(Context context){
         AbsDriversFactory driversFactory = new DriversFactory();
-        pekonPrinters = driversFactory.getPekonPrinter();
+        pekonPrinters = driversFactory.getPekonPrinter(context);
     }
 
 
@@ -103,7 +108,7 @@ public class PrinterManager {
             return;
         }
 
-        if (pekonPrinters.size() <= 0) {
+        if (pekonPrinters==null||pekonPrinters.size() <= 0) {
             return;
         }
 
