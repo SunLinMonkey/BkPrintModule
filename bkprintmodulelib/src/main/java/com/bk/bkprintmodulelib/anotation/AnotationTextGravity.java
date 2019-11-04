@@ -1,8 +1,9 @@
-package com.example.pekonprinter.annotation;
+package com.bk.bkprintmodulelib.anotation;
 
 import android.support.annotation.IntDef;
 
-import com.example.pekonprinter.constans.TextGravity;
+
+import com.bk.bkprintmodulelib.cosntants.TextGravity;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

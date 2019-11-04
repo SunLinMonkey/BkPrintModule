@@ -1,9 +1,9 @@
-package com.example.pekonprinter.annotation;
+package com.bk.bkprintmodulelib.anotation;
 
 import android.support.annotation.IntDef;
 
 
-import com.example.pekonprinter.constans.TextSize;
+import com.bk.bkprintmodulelib.cosntants.TextSize;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

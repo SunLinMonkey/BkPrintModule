@@ -1,7 +1,7 @@
-package com.example.pekonprinter.suppor_cosumer_produce;
+package com.bk.bkprintmodulelib.support_cp;
 
 
-import com.example.pekonprinter.printer_help.IPrintDataAnalysis;
+import com.bk.bkprintmodulelib.print_help.IPrintDataAnalysis;
 
 public interface DataChannel {
 

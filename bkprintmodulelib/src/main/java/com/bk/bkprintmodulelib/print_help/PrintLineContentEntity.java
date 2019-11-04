@@ -1,8 +1,8 @@
-package com.example.pekonprinter.printer_help;
+package com.bk.bkprintmodulelib.print_help;
 
 import android.graphics.Bitmap;
 
-import com.example.pekonprinter.annotation.AnotationCommandType;
+import com.bk.bkprintmodulelib.anotation.AnotationCommandType;
 
 
 /**

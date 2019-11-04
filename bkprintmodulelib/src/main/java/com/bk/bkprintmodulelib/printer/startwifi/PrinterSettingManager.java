@@ -1,4 +1,4 @@
-package com.example.pekonprinter.printer.startwifi;
+package com.bk.bkprintmodulelib.printer.startwifi;
 
 import android.content.Context;
 import android.content.SharedPreferences;

@@ -1,4 +1,4 @@
-package com.example.pekonprinter.constans;
+package com.bk.bkprintmodulelib.cosntants;
 
 /**
  * 打印小票byte数组指令

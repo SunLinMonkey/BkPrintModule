@@ -1,14 +1,14 @@
-package com.example.pekonprinter.printer.summi;
+package com.bk.bkprintmodulelib.printer.summi;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 
-import com.example.pekonprinter.constans.TextGravity;
-import com.example.pekonprinter.constans.TextSize;
-import com.example.pekonprinter.printer_help.AbstractPrintStatus;
-import com.example.pekonprinter.printer_help.ConnectionCallBack;
-import com.example.pekonprinter.printer_help.IPrinter;
-import com.example.pekonprinter.printer_help.InitPrinterCallBack;
+import com.bk.bkprintmodulelib.cosntants.TextGravity;
+import com.bk.bkprintmodulelib.cosntants.TextSize;
+import com.bk.bkprintmodulelib.print_help.AbstractPrintStatus;
+import com.bk.bkprintmodulelib.print_help.ConnectionCallBack;
+import com.bk.bkprintmodulelib.print_help.IPrinter;
+import com.bk.bkprintmodulelib.print_help.InitPrinterCallBack;
 
 
 /**

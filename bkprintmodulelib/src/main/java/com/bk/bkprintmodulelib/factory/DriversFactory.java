@@ -1,20 +1,17 @@
-package com.example.pekondrivers.factory;
+package com.bk.bkprintmodulelib.factory;
 
 import android.util.SparseArray;
 
-import com.example.pekondrivers.printer.IPrinter;
-import com.example.pekondrivers.printer.bluetooth.BluetoothPrinter;
-import com.example.pekondrivers.printer.constans.PekonPrinterType;
-import com.example.pekondrivers.printer.partner.PartnerPrinter;
-import com.example.pekondrivers.printer.startwifi.StartWIFIPrinter;
-import com.example.pekondrivers.printer.summi.SummiPrinter;
-import com.example.pekondrivers.printer.usb.USBPrinter;
-import com.example.pekondrivers.printer.usbparallelport.USBParallelPortPrinter;
-import com.example.pekondrivers.printer.usbserialport.USBSerialport;
-import com.example.pekondrivers.printer.wifi.WIFIPrinter;
+import com.bk.bkprintmodulelib.cosntants.PekonPrinterType;
+import com.bk.bkprintmodulelib.print_help.IPrinter;
+import com.bk.bkprintmodulelib.printer.bluetooth.BluetoothPrinter;
+import com.bk.bkprintmodulelib.printer.parter.PartnerPrinter;
+import com.bk.bkprintmodulelib.printer.startwifi.StartWIFIPrinter;
+import com.bk.bkprintmodulelib.printer.summi.SummiPrinter;
+import com.bk.bkprintmodulelib.printer.usb.USBPrinter;
+import com.bk.bkprintmodulelib.printer.usbparallelport.USBParallelPortPrinter;
+import com.bk.bkprintmodulelib.printer.usbserialport.USBSerialport;
 
-import java.util.ArrayList;
-import java.util.List;
 
 public class DriversFactory extends AbsDriversFactory {
 

@@ -1,4 +1,4 @@
-package com.example.pekonprinter.printer.parter;
+package com.bk.bkprintmodulelib.printer.parter;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;

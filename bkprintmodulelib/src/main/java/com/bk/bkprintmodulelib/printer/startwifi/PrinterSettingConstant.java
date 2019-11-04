@@ -1,4 +1,4 @@
-package com.example.pekonprinter.printer.startwifi;
+package com.bk.bkprintmodulelib.printer.startwifi;
 
 public class PrinterSettingConstant {
     public static final int LANGUAGE_ENGLISH = 0;

@@ -1,4 +1,4 @@
-package com.example.pekonprinter.printer.wifi;
+package com.bk.bkprintmodulelib.printer.wifi;
 
 /**
  * ip检查工具

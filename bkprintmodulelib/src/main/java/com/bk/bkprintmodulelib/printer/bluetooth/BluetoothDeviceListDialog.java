@@ -1,4 +1,4 @@
-package com.example.pekonprinter.printer.bluetooth;
+package com.bk.bkprintmodulelib.printer.bluetooth;
 
 import android.app.Dialog;
 import android.bluetooth.BluetoothAdapter;
@@ -26,8 +26,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 
-import com.example.pekonprinter.R;
-import com.example.pekonprinter.printer_help.SharedPrefUtil;
+import com.bk.bkprintmodulelib.R;
+import com.bk.bkprintmodulelib.print_help.SharedPrefUtil;
 
 import java.util.Set;
 

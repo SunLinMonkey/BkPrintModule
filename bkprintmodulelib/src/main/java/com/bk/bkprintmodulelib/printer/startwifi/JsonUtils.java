@@ -1,4 +1,4 @@
-package com.example.pekonprinter.printer.startwifi;
+package com.bk.bkprintmodulelib.printer.startwifi;
 
 import org.json.JSONArray;
 import org.json.JSONException;

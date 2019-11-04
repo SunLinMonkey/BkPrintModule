@@ -1,4 +1,4 @@
-package com.example.pekonprinter.constans;
+package com.bk.bkprintmodulelib.cosntants;
 
 public enum BarcodeType {
 

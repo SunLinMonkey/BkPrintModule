@@ -1,10 +1,10 @@
-package com.example.pekonprinter.printer_help;
+package com.bk.bkprintmodulelib.print_help;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 
-import com.example.pekonprinter.annotation.AnotationPrintTextSize;
-import com.example.pekonprinter.annotation.AnotationTextGravity;
+import com.bk.bkprintmodulelib.anotation.AnotationPrintTextSize;
+import com.bk.bkprintmodulelib.anotation.AnotationTextGravity;
 
 
 public interface IPrinter {

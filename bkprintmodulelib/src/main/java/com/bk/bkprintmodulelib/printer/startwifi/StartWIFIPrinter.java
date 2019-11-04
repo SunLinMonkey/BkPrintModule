@@ -1,16 +1,16 @@
-package com.example.pekonprinter.printer.startwifi;
+package com.bk.bkprintmodulelib.printer.startwifi;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.widget.Toast;
 
 
-import com.example.pekonprinter.constans.EncodingFormat;
-import com.example.pekonprinter.constans.TextGravity;
-import com.example.pekonprinter.constans.TextSize;
-import com.example.pekonprinter.printer_help.AbstractPrintStatus;
-import com.example.pekonprinter.printer_help.AsyncGetPrinterTask;
-import com.example.pekonprinter.printer_help.IPrinter;
+import com.bk.bkprintmodulelib.cosntants.EncodingFormat;
+import com.bk.bkprintmodulelib.cosntants.TextGravity;
+import com.bk.bkprintmodulelib.cosntants.TextSize;
+import com.bk.bkprintmodulelib.print_help.AbstractPrintStatus;
+import com.bk.bkprintmodulelib.print_help.AsyncGetPrinterTask;
+import com.bk.bkprintmodulelib.print_help.IPrinter;
 import com.starmicronics.stario.PortInfo;
 import com.starmicronics.starioextension.ICommandBuilder;
 import com.starmicronics.starioextension.StarIoExt;

@@ -1,16 +1,16 @@
-package com.example.pekonprinter.printer.wifi;
+package com.bk.bkprintmodulelib.printer.wifi;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 
 
-import com.example.pekonprinter.constans.PrintCmd;
-import com.example.pekonprinter.constans.TextGravity;
-import com.example.pekonprinter.constans.TextSize;
-import com.example.pekonprinter.printer.startwifi.PrinterSettingManager;
-import com.example.pekonprinter.printer.startwifi.PrinterSettings;
-import com.example.pekonprinter.printer_help.AbstractPrintStatus;
-import com.example.pekonprinter.printer_help.IPrinter;
+import com.bk.bkprintmodulelib.cosntants.PrintCmd;
+import com.bk.bkprintmodulelib.cosntants.TextGravity;
+import com.bk.bkprintmodulelib.cosntants.TextSize;
+import com.bk.bkprintmodulelib.print_help.AbstractPrintStatus;
+import com.bk.bkprintmodulelib.print_help.IPrinter;
+import com.bk.bkprintmodulelib.printer.startwifi.PrinterSettingManager;
+import com.bk.bkprintmodulelib.printer.startwifi.PrinterSettings;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;

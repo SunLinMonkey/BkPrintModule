@@ -1,4 +1,4 @@
-package com.example.pekonprinter.printer.summi;
+package com.bk.bkprintmodulelib.printer.summi;
 
 import android.content.ComponentName;
 import android.content.Context;
@@ -8,9 +8,10 @@ import android.graphics.Bitmap;
 import android.os.IBinder;
 import android.os.RemoteException;
 
-import com.example.pekonprinter.printer_help.ConnectionCallBack;
-import com.example.pekonprinter.printer_help.ESCUtil;
-import com.example.pekonprinter.printer_help.InitPrinterCallBack;
+
+import com.bk.bkprintmodulelib.print_help.ConnectionCallBack;
+import com.bk.bkprintmodulelib.print_help.ESCUtil;
+import com.bk.bkprintmodulelib.print_help.InitPrinterCallBack;
 
 import woyou.aidlservice.jiuiv5.ICallback;
 import woyou.aidlservice.jiuiv5.IWoyouService;

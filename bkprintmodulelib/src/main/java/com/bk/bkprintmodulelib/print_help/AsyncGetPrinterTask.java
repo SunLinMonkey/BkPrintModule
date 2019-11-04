@@ -1,9 +1,8 @@
-package com.example.pekonprinter.printer_help;
+package com.bk.bkprintmodulelib.print_help;
 
 import android.content.Context;
 import android.os.AsyncTask;
 import android.widget.Toast;
-
 
 import com.starmicronics.stario.PortInfo;
 import com.starmicronics.stario.StarIOPort;

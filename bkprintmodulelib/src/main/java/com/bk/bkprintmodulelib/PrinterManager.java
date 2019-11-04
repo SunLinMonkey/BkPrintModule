@@ -1,21 +1,21 @@
-package com.example.pekonprinter;
+package com.bk.bkprintmodulelib;
 
 import android.content.Context;
 import android.util.Log;
 import android.util.SparseArray;
 
 
-import com.example.pekonprinter.annotation.AnotationPrinterType;
-import com.example.pekonprinter.constans.CommandType;
-import com.example.pekonprinter.factory.AbsDriversFactory;
-import com.example.pekonprinter.factory.DriversFactory;
-import com.example.pekonprinter.printer_help.AbstractPrintStatus;
-import com.example.pekonprinter.printer_help.IPrintDataAnalysis;
-import com.example.pekonprinter.printer_help.IPrinter;
-import com.example.pekonprinter.printer_help.PrintLineContentEntity;
-import com.example.pekonprinter.suppor_cosumer_produce.DataChannel;
-import com.example.pekonprinter.suppor_cosumer_produce.DataChannelFIFOImpl;
-import com.example.pekonprinter.suppor_cosumer_produce.ProductRunnable;
+import com.bk.bkprintmodulelib.anotation.AnotationPrinterType;
+import com.bk.bkprintmodulelib.cosntants.CommandType;
+import com.bk.bkprintmodulelib.factory.AbsDriversFactory;
+import com.bk.bkprintmodulelib.factory.DriversFactory;
+import com.bk.bkprintmodulelib.print_help.AbstractPrintStatus;
+import com.bk.bkprintmodulelib.print_help.IPrintDataAnalysis;
+import com.bk.bkprintmodulelib.print_help.IPrinter;
+import com.bk.bkprintmodulelib.print_help.PrintLineContentEntity;
+import com.bk.bkprintmodulelib.support_cp.DataChannel;
+import com.bk.bkprintmodulelib.support_cp.DataChannelFIFOImpl;
+import com.bk.bkprintmodulelib.support_cp.ProductRunnable;
 
 import java.util.List;
 import java.util.concurrent.ExecutorService;

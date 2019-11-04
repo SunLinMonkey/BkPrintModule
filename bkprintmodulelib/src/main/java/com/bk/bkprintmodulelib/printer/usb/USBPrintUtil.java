@@ -1,4 +1,4 @@
-package com.example.pekonprinter.printer.usb;
+package com.bk.bkprintmodulelib.printer.usb;
 
 import android.annotation.SuppressLint;
 import android.app.PendingIntent;
@@ -17,7 +17,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 
-import com.example.pekonprinter.printer_help.PrintCallBack;
+import com.bk.bkprintmodulelib.print_help.PrintCallBack;
 
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;

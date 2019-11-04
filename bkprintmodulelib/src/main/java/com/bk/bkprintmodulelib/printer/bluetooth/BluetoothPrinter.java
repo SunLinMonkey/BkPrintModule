@@ -1,4 +1,4 @@
-package com.example.pekonprinter.printer.bluetooth;
+package com.bk.bkprintmodulelib.printer.bluetooth;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -7,9 +7,9 @@ import android.os.Message;
 import com.android.print.sdk.Barcode;
 import com.android.print.sdk.PrinterConstants;
 import com.android.print.sdk.PrinterInstance;
-import com.example.pekonprinter.constans.TextSize;
-import com.example.pekonprinter.printer_help.AbstractPrintStatus;
-import com.example.pekonprinter.printer_help.IPrinter;
+import com.bk.bkprintmodulelib.cosntants.TextSize;
+import com.bk.bkprintmodulelib.print_help.AbstractPrintStatus;
+import com.bk.bkprintmodulelib.print_help.IPrinter;
 
 
 import java.io.File;

@@ -1,8 +1,8 @@
-package com.example.pekonprinter.suppor_cosumer_produce;
+package com.bk.bkprintmodulelib.support_cp;
 
 import android.util.Log;
 
-import com.example.pekonprinter.printer_help.IPrintDataAnalysis;
+import com.bk.bkprintmodulelib.print_help.IPrintDataAnalysis;
 
 
 public class ProductRunnable implements Runnable {

@@ -1,9 +1,10 @@
-package com.example.pekonprinter.annotation;
+package com.bk.bkprintmodulelib.anotation;
 
 
 import android.support.annotation.IntDef;
 
-import com.example.pekonprinter.constans.PekonPrinterType;
+
+import com.bk.bkprintmodulelib.cosntants.PekonPrinterType;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

@@ -1,9 +1,10 @@
-package com.example.pekondrivers.factory;
+package com.bk.bkprintmodulelib.factory;
 
 import android.graphics.Bitmap;
 
-import com.example.pekondrivers.print_help.PrintLineContentEntity;
-import com.example.pekondrivers.printer.constans.CommandType;
+import com.bk.bkprintmodulelib.cosntants.CommandType;
+import com.bk.bkprintmodulelib.print_help.PrintLineContentEntity;
+
 
 /**
  * 打印内容工厂

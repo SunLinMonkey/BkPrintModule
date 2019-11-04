@@ -1,4 +1,4 @@
-package com.example.pekonprinter.printer.usb;
+package com.bk.bkprintmodulelib.printer.usb;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -6,11 +6,11 @@ import android.os.Build;
 import android.support.annotation.RequiresApi;
 
 
-import com.example.pekonprinter.constans.PrintCmd;
-import com.example.pekonprinter.constans.TextSize;
-import com.example.pekonprinter.printer_help.AbstractPrintStatus;
-import com.example.pekonprinter.printer_help.IPrinter;
-import com.example.pekonprinter.printer_help.PrintCallBack;
+import com.bk.bkprintmodulelib.cosntants.PrintCmd;
+import com.bk.bkprintmodulelib.cosntants.TextSize;
+import com.bk.bkprintmodulelib.print_help.AbstractPrintStatus;
+import com.bk.bkprintmodulelib.print_help.IPrinter;
+import com.bk.bkprintmodulelib.print_help.PrintCallBack;
 
 import java.io.UnsupportedEncodingException;
 

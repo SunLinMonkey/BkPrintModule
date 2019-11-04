@@ -1,3 +1,25 @@
 <resources>
     <string name="app_name">BkPrintModuleLib</string>
+
+    <string name="scanning">扫描设备中&#8230;</string>
+    <string name="select_device">请选择要连接的设备</string>
+    <string name="none_paired">没有匹配的设备</string>
+    <string name="has_paired">已配对</string>
+    <string name="not_paired">未配对</string>
+    <string name="rePaire_connect">重新配对并连接</string>
+    <string name="unpair">取消配对</string>
+    <string name="paire_connect">配对并连接</string>
+    <string name="connect_paired">连接</string>
+    <string name="select_options">选择操作</string>
+    <string name="none_found">没有找到设备</string>
+
+    <string name="our_company">上海秉坤数码科技有限公司</string>
+    <string name="hot_line">热线电话</string>
+
+    <string name="start_print_test">打印测试开始</string>
+    <string name="title_hotline">热线：</string>
+
+    <string name="button_scan">扫描新设备</string>
+    <string name="end_print_test">---打印测试结束---</string>
+
 </resources>

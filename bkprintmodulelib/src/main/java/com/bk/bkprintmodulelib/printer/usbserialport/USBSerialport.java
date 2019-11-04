@@ -1,16 +1,16 @@
-package com.example.pekonprinter.printer.usbserialport;
+package com.bk.bkprintmodulelib.printer.usbserialport;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.util.Log;
 
 
-import com.example.pekonprinter.constans.EncodingFormat;
-import com.example.pekonprinter.constans.PrintCmd;
-import com.example.pekonprinter.constans.TextGravity;
-import com.example.pekonprinter.constans.TextSize;
-import com.example.pekonprinter.printer_help.AbstractPrintStatus;
-import com.example.pekonprinter.printer_help.IPrinter;
+import com.bk.bkprintmodulelib.cosntants.EncodingFormat;
+import com.bk.bkprintmodulelib.cosntants.PrintCmd;
+import com.bk.bkprintmodulelib.cosntants.TextGravity;
+import com.bk.bkprintmodulelib.cosntants.TextSize;
+import com.bk.bkprintmodulelib.print_help.AbstractPrintStatus;
+import com.bk.bkprintmodulelib.print_help.IPrinter;
 
 import java.io.File;
 import java.io.IOException;
