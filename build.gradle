@@ -14,26 +14,12 @@ buildscript {
     }
 }
 
-
-
 allprojects {
     repositories {
         google()
         jcenter()
         
     }
-
-//    subprojects {
-//        afterEvaluate {
-//            project ->
-//                if (project.hasProperty("android")) {
-//                    android {
-//                        compileSdkVersion = 27
-//                        buildToolsVersion = "28.0.3"
-//                    }
-//                }
-//        }
-//    }
 }
 
 task clean(type: Delete) {
