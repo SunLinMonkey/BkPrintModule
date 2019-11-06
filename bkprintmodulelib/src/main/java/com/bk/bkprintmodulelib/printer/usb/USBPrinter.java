@@ -8,13 +8,17 @@ import android.support.annotation.RequiresApi;
 
 import com.bk.bkprintmodulelib.cosntants.PrintCmd;
 import com.bk.bkprintmodulelib.cosntants.TextSize;
+import com.bk.bkprintmodulelib.factory.HelpEntityFactory;
 import com.bk.bkprintmodulelib.print_help.AbstractPrintStatus;
+import com.bk.bkprintmodulelib.print_help.HelpEntity;
 import com.bk.bkprintmodulelib.print_help.IPrinter;
 import com.bk.bkprintmodulelib.print_help.PrintCallBack;
+import com.bk.bkprintmodulelib.printer.BasePrinter;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
-public class USBPrinter implements IPrinter {
+public class USBPrinter extends BasePrinter implements IPrinter {
 
     private USBPrintUtil usbPrintUtil;
     private StringBuffer printMessage;
@@ -38,7 +42,7 @@ public class USBPrinter implements IPrinter {
 
             @Override
             public void onFailed(String errorCode, String errorMessage) {
-                listener.onPrinterInitFailed(errorCode,errorMessage);
+                listener.onPrinterInitFailed(errorCode, errorMessage);
                 isPrinterReady = false;
             }
         });
@@ -61,20 +65,8 @@ public class USBPrinter implements IPrinter {
 
     @Override
     public void printText(String content) {
-        printText(content, TextSize.TEXT_SIZE_DEFAULT);
-    }
-
-    @Override
-    public void printText(String content, int textSize) {
-
-        printMessage.append(PrintCmd.size(1,1));
-
+        getLocalTextSize();
         printMessage.append(content);
-    }
-
-    @Override
-    public void printText(String content, int textSize, int gravity) {
-
     }
 
     @Override
@@ -82,24 +74,16 @@ public class USBPrinter implements IPrinter {
 
     }
 
-    @Override
-    public void printBarCode(String content, int textSize) {
-
-    }
 
     @Override
     public void printQRCode(String content) {
         try {
-            printMessage.append(PrintCmd.generate2DBarcodePartner(content.getBytes("GBK").length,8));
+            printMessage.append(PrintCmd.generate2DBarcodePartner(content.getBytes("GBK").length, 8));
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
     }
 
-    @Override
-    public void printQRCode(String content, int textSize) {
-
-    }
 
     @Override
     public void printImage(Bitmap bitmap) {
@@ -108,9 +92,14 @@ public class USBPrinter implements IPrinter {
 
     @Override
     public void closePrinter(Context context) {
-        if (usbPrintUtil!=null){
+        if (usbPrintUtil != null) {
             usbPrintUtil.closeConnection(context);
         }
+    }
+
+    @Override
+    public void setPrintHelpData(HelpEntity helpEntity) {
+        setHelpEntity(helpEntity);
     }
 
     @Override
@@ -132,11 +121,11 @@ public class USBPrinter implements IPrinter {
 
     @Override
     public void startPrint(Context context) {
-        if (printMessage==null){
-            listener.onPrintFailed("","");
+        if (printMessage == null) {
+            listener.onPrintFailed("", "");
             return;
         }
-        usbPrintUtil.printMessage(context,printMessage.toString());
+        usbPrintUtil.printMessage(context, printMessage.toString());
     }
 
     @Override
@@ -152,5 +141,48 @@ public class USBPrinter implements IPrinter {
     @Override
     public boolean isPrinterReady() {
         return isPrinterReady;
+    }
+
+
+    /**
+     * 将通用字体大小转成本打印机实体类使用的字体大小
+     *
+     * @param textSize
+     * @return
+     */
+    private void getLocalTextSize(int textSize) {
+        switch (textSize) {
+            case TextSize.TEXT_SIZE_DOWN_2:
+            case TextSize.TEXT_SIZE_DOWN_1:
+            case TextSize.TEXT_SIZE_DEFAULT: {
+                printMessage.append(PrintCmd.size(1, 1));
+                break;
+            }
+
+            case TextSize.TEXT_SIZE_UP_3: {
+                printMessage.append(PrintCmd.size(2, 2));
+                break;
+            }
+
+            case TextSize.TEXT_SIZE_UP_4: {
+                printMessage.append(PrintCmd.size(3, 3));
+                break;
+            }
+
+            default: {
+                printMessage.append(PrintCmd.size(1, 1));
+                break;
+            }
+        }
+    }
+
+    @Override
+    protected void getLocalTextSize() {
+        getLocalTextSize(getHelpEntity().getTestSize());
+    }
+
+    @Override
+    protected void getLocalGravity() {
+
     }
 }

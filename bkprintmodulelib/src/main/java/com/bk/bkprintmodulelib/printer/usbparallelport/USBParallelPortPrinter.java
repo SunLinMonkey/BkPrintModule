@@ -4,12 +4,12 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.util.Log;
 
-
 import com.bk.bkprintmodulelib.cosntants.PrintCmd;
-import com.bk.bkprintmodulelib.cosntants.TextGravity;
 import com.bk.bkprintmodulelib.cosntants.TextSize;
 import com.bk.bkprintmodulelib.print_help.AbstractPrintStatus;
+import com.bk.bkprintmodulelib.print_help.HelpEntity;
 import com.bk.bkprintmodulelib.print_help.IPrinter;
+import com.bk.bkprintmodulelib.printer.BasePrinter;
 
 import java.io.File;
 import java.io.IOException;
@@ -19,7 +19,7 @@ import java.io.UnsupportedEncodingException;
 import android_serialport_api.ParallelProt;
 
 
-public class USBParallelPortPrinter implements IPrinter {
+public class USBParallelPortPrinter extends BasePrinter implements IPrinter {
     private static final String TAG = "9527";
 
     private final String PARALLEL_PROT_FILE_PATH = "/dev/lp0";
@@ -66,21 +66,10 @@ public class USBParallelPortPrinter implements IPrinter {
 
     @Override
     public void printText(String content) {
-        printText(content, TextSize.TEXT_SIZE_DEFAULT);
-    }
-
-    @Override
-    public void printText(String content, int textSize) {
-        printText(content,textSize, TextGravity.GRAVITY_LEFT);
-    }
-
-    @Override
-    public void printText(String content, int textSize, int gravity) {
-        getLocalGravity(gravity);
-        getLocalTextSize(textSize);
+        getLocalGravity();
+        getLocalTextSize();
         printStr.append(content);
     }
-
 
 
     @Override
@@ -88,10 +77,6 @@ public class USBParallelPortPrinter implements IPrinter {
 
     }
 
-    @Override
-    public void printBarCode(String content, int textSize) {
-
-    }
 
     @Override
     public void printQRCode(String content) {
@@ -99,15 +84,6 @@ public class USBParallelPortPrinter implements IPrinter {
 //        printQRCode(content, TextSize.TEXT_SIZE_DEFAULT);
     }
 
-    @Override
-    public void printQRCode(String content, int textSize) {
-        //并口不能打二维码
-//        try {
-//            printStr.append(PrintCmd.generate2DBarcodePartner(content.getBytes("GBK").length,8));
-//        } catch (UnsupportedEncodingException e) {
-//            e.printStackTrace();
-//        }
-    }
 
     @Override
     public void printImage(Bitmap bitmap) {
@@ -117,6 +93,11 @@ public class USBParallelPortPrinter implements IPrinter {
     @Override
     public void closePrinter(Context context) {
         destroyParallel();
+    }
+
+    @Override
+    public void setPrintHelpData(HelpEntity helpEntity) {
+        setHelpEntity(helpEntity);
     }
 
     @Override
@@ -205,12 +186,12 @@ public class USBParallelPortPrinter implements IPrinter {
             }
 
             case TextSize.TEXT_SIZE_UP_3: {
-                printStr.append(PrintCmd.size(1,0));
+                printStr.append(PrintCmd.size(1, 0));
                 break;
             }
 
             case TextSize.TEXT_SIZE_UP_4: {
-                printStr.append(PrintCmd.size(2,2));
+                printStr.append(PrintCmd.size(2, 2));
                 break;
             }
 
@@ -228,5 +209,15 @@ public class USBParallelPortPrinter implements IPrinter {
      */
     private void getLocalGravity(int gravity) {
 
+    }
+
+    @Override
+    protected void getLocalTextSize() {
+        getLocalTextSize(getHelpEntity().getTestSize());
+    }
+
+    @Override
+    protected void getLocalGravity() {
+        getLocalGravity(getHelpEntity().getGrivaty());
     }
 }

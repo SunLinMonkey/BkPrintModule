@@ -8,8 +8,11 @@ import android.util.Log;
 import com.bk.bkprintmodulelib.cosntants.PrintCmd;
 import com.bk.bkprintmodulelib.cosntants.TextGravity;
 import com.bk.bkprintmodulelib.cosntants.TextSize;
+import com.bk.bkprintmodulelib.factory.HelpEntityFactory;
 import com.bk.bkprintmodulelib.print_help.AbstractPrintStatus;
+import com.bk.bkprintmodulelib.print_help.HelpEntity;
 import com.bk.bkprintmodulelib.print_help.IPrinter;
+import com.bk.bkprintmodulelib.printer.BasePrinter;
 
 import java.io.File;
 import java.io.IOException;
@@ -17,7 +20,7 @@ import java.io.OutputStream;
 
 import android_serialport_api.SerialPort;
 
-public class PartnerPrinter implements IPrinter {
+public class PartnerPrinter extends BasePrinter implements IPrinter {
 
     private static final String TAG = "9527";
     private SerialPort mSerialPort = null;
@@ -50,16 +53,6 @@ public class PartnerPrinter implements IPrinter {
 
     @Override
     public void printText(String content) {
-        printText(content, TextSize.TEXT_SIZE_DEFAULT);
-    }
-
-    @Override
-    public void printText(String content, int textSize) {
-        printText(content, textSize, TextGravity.GRAVITY_LEFT);
-    }
-
-    @Override
-    public void printText(String content, int textSize, int gravity) {
         try {
             pOutputStream.write(content.getBytes("GBK"));
         } catch (IOException e) {
@@ -67,26 +60,17 @@ public class PartnerPrinter implements IPrinter {
         }
     }
 
-
     @Override
     public void printBarCode(String content) {
 
     }
 
-    @Override
-    public void printBarCode(String content, int textSize) {
-
-    }
 
     @Override
     public void printQRCode(String content) {
-        printQRCode(content, TextSize.TEXT_SIZE_DEFAULT);
-    }
-
-    @Override
-    public void printQRCode(String content, int textSize) {
         print2DBarcode(content);
     }
+
 
     @Override
     public void printImage(Bitmap bitmap) {
@@ -108,6 +92,11 @@ public class PartnerPrinter implements IPrinter {
             mSerialPort = null;
         }
 
+    }
+
+    @Override
+    public void setPrintHelpData(HelpEntity helpEntity) {
+        setHelpEntity(helpEntity);
     }
 
     @Override
@@ -202,5 +191,15 @@ public class PartnerPrinter implements IPrinter {
             Log.d("拍档打印", "SetWhitePrint " + e.getMessage());
         }
         return -1;
+    }
+
+    @Override
+    protected void getLocalTextSize() {
+
+    }
+
+    @Override
+    protected void getLocalGravity() {
+
     }
 }

@@ -18,23 +18,17 @@ import com.bk.bkprintmodulelib.printer.usbserialport.USBSerialport;
 
 public class DriversFactory extends AbsDriversFactory {
 
-    /**
-     * 是否启用一单多端打印支持
-     */
-    private boolean openMultiPrinter = false;
-
-
     @Override
     public SparseArray<IPrinter> getPekonPrinter(Context context) {
+        boolean openMultiPrinter = false;
         SparseArray<IPrinter> printers = new SparseArray<>();
 
-        int mainPrinter = SharedPrefUtil.getInstance().getMainPrinter(context);
-        getPrinter(printers, mainPrinter);
+        getPrinter(printers, SharedPrefUtil.getInstance().getMainPrinter(context));
 
         if (openMultiPrinter) {
-            mainPrinter = SharedPrefUtil.getInstance().getHelpPrinter(context);
-            getPrinter(printers, mainPrinter);
+            getPrinter(printers, SharedPrefUtil.getInstance().getHelpPrinter(context));
         }
+
         return printers;
     }
 
@@ -73,12 +67,7 @@ public class DriversFactory extends AbsDriversFactory {
                 printers.put(PekonPrinterType.PRINTER_USB_PARALLEL, iPrinter);
                 break;
             }
-            case PekonPrinterType.PRINTER_LDPRINT: {
-                break;
-            }
-            case PekonPrinterType.PRINTER_BLUETOOTH_BOX: {
-                break;
-            }
+
             case PekonPrinterType.PRINTER_PARTNERPRINT: {
                 IPrinter iPrinter = new PartnerPrinter();
                 printers.put(PekonPrinterType.PRINTER_PARTNERPRINT, iPrinter);
@@ -91,6 +80,13 @@ public class DriversFactory extends AbsDriversFactory {
             }
 
             case PekonPrinterType.PRINTER_MS_WIFI: {
+                break;
+            }
+
+            case PekonPrinterType.PRINTER_LDPRINT: {
+                break;
+            }
+            case PekonPrinterType.PRINTER_BLUETOOTH_BOX: {
                 break;
             }
 

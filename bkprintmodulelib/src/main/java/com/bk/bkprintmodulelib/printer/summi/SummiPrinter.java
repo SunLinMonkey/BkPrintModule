@@ -5,16 +5,19 @@ import android.graphics.Bitmap;
 
 import com.bk.bkprintmodulelib.cosntants.TextGravity;
 import com.bk.bkprintmodulelib.cosntants.TextSize;
+import com.bk.bkprintmodulelib.factory.HelpEntityFactory;
 import com.bk.bkprintmodulelib.print_help.AbstractPrintStatus;
 import com.bk.bkprintmodulelib.print_help.ConnectionCallBack;
+import com.bk.bkprintmodulelib.print_help.HelpEntity;
 import com.bk.bkprintmodulelib.print_help.IPrinter;
 import com.bk.bkprintmodulelib.print_help.InitPrinterCallBack;
+import com.bk.bkprintmodulelib.printer.BasePrinter;
 
 
 /**
  * 商米AIDL 调用打印实体类
  */
-public class SummiPrinter implements IPrinter {
+public class SummiPrinter extends BasePrinter implements IPrinter {
 
     private final int TEXT_SIZE_23 = 23;
     private final int TEXT_SIZE_46 = 46;
@@ -68,41 +71,23 @@ public class SummiPrinter implements IPrinter {
 
     @Override
     public void printText(String content) {
-        printText(content, TextSize.TEXT_SIZE_DEFAULT);
+        HelpEntity helpEntity = getHelpEntity();
+        int localTextSize = getLocalTextSize(helpEntity.getTestSize());
+        SummiAidlUtil.getInstance().printText(content, localTextSize, helpEntity.isBold(), helpEntity.getGrivaty(), helpEntity.isNeedUnderLine(), null);
     }
-
-    @Override
-    public void printText(String content, int textSize) {
-        printText(content,textSize, TextGravity.GRAVITY_LEFT);
-    }
-
-    @Override
-    public void printText(String content, int textSize, int gravity) {
-        int localSize = getLocalTextSize(textSize);
-        SummiAidlUtil.getInstance().printText(content, localSize, false, true, true, null);
-    }
-
 
     @Override
     public void printBarCode(String content) {
-        printBarCode(content, TextSize.TEXT_SIZE_DEFAULT);
-    }
-
-    @Override
-    public void printBarCode(String content, int textSize) {
         //只有 CODE39、CODABAR、CODE93、CODE128 能打  已建立对于的BARCODETYPE 类,用的时候记得对应处理
         SummiAidlUtil.getInstance().printBarCode(content, 8, 162, 2, 2, null);
     }
+
 
     @Override
     public void printQRCode(String content) {
         SummiAidlUtil.getInstance().printQr(content, 8, 160);
     }
 
-    @Override
-    public void printQRCode(String content, int textSize) {
-        SummiAidlUtil.getInstance().printQr(content, 8, 160);
-    }
 
     @Override
     public void printImage(Bitmap bitmap) {
@@ -112,6 +97,11 @@ public class SummiPrinter implements IPrinter {
     @Override
     public void closePrinter(Context context) {
 
+    }
+
+    @Override
+    public void setPrintHelpData(HelpEntity helpEntity) {
+        setHelpEntity(helpEntity);
     }
 
     @Override
@@ -182,5 +172,15 @@ public class SummiPrinter implements IPrinter {
                 return TEXT_SIZE_DEFAULT;
             }
         }
+    }
+
+    @Override
+    protected void getLocalTextSize() {
+//        getLocalTextSize(getHelpEntity().getTestSize());
+    }
+
+    @Override
+    protected void getLocalGravity() {
+
     }
 }

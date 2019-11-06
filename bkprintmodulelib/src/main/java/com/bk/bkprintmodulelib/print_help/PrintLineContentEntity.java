@@ -3,6 +3,7 @@ package com.bk.bkprintmodulelib.print_help;
 import android.graphics.Bitmap;
 
 import com.bk.bkprintmodulelib.anotation.AnotationCommandType;
+import com.bk.bkprintmodulelib.factory.HelpEntityFactory;
 
 
 /**
@@ -14,16 +15,6 @@ public class PrintLineContentEntity {
      * 命令类型
      */
     private int command;
-
-    /**
-     * 字体大小
-     */
-    private int textSize;
-
-    /**
-     * 字体位置
-     */
-    private int textGrive;
 
     /**
      * 打印内容
@@ -40,15 +31,18 @@ public class PrintLineContentEntity {
      */
     private Bitmap bitmap;
 
+    /**
+     * 打印辅助属性对象
+     */
+    private HelpEntity helpEntity;
 
     public PrintLineContentEntity() {
 
     }
 
-    public PrintLineContentEntity(int command, int textSize, int textGrive, String content, int lineNums, Bitmap bitmap) {
+    public PrintLineContentEntity(int command, HelpEntity helpEntity, String content, int lineNums, Bitmap bitmap) {
         this.command = command;
-        this.textSize = textSize;
-        this.textGrive = textGrive;
+        this.helpEntity = helpEntity;
         this.content = content;
         this.lineNums = lineNums;
         this.bitmap = bitmap;
@@ -62,21 +56,6 @@ public class PrintLineContentEntity {
         this.command = command;
     }
 
-    public int getTextSize() {
-        return textSize;
-    }
-
-    public void setTextSize(int textSize) {
-        this.textSize = textSize;
-    }
-
-    public int getTextGrive() {
-        return textGrive;
-    }
-
-    public void setTextGrive(int textGrive) {
-        this.textGrive = textGrive;
-    }
 
     public String getContent() {
         return content;
@@ -100,5 +79,16 @@ public class PrintLineContentEntity {
 
     public void setBitmap(Bitmap bitmap) {
         this.bitmap = bitmap;
+    }
+
+    public HelpEntity getHelpEntity() {
+        if (helpEntity==null){
+            return HelpEntityFactory.getDefaultHelpEntity();
+        }
+        return helpEntity;
+    }
+
+    public void setHelpEntity(HelpEntity helpEntity) {
+        this.helpEntity = helpEntity;
     }
 }

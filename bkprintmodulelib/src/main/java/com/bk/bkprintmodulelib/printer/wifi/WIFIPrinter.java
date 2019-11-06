@@ -3,12 +3,12 @@ package com.bk.bkprintmodulelib.printer.wifi;
 import android.content.Context;
 import android.graphics.Bitmap;
 
-
 import com.bk.bkprintmodulelib.cosntants.PrintCmd;
 import com.bk.bkprintmodulelib.cosntants.TextGravity;
-import com.bk.bkprintmodulelib.cosntants.TextSize;
 import com.bk.bkprintmodulelib.print_help.AbstractPrintStatus;
+import com.bk.bkprintmodulelib.print_help.HelpEntity;
 import com.bk.bkprintmodulelib.print_help.IPrinter;
+import com.bk.bkprintmodulelib.printer.BasePrinter;
 import com.bk.bkprintmodulelib.printer.startwifi.PrinterSettingManager;
 import com.bk.bkprintmodulelib.printer.startwifi.PrinterSettings;
 
@@ -26,7 +26,7 @@ import java.net.UnknownHostException;
 /**
  * 这里有点特殊，有两种类型的打印。都特么叫WiFi,我就放一起了。算是个秉坤化的东西把
  */
-public class WIFIPrinter implements IPrinter {
+public class WIFIPrinter extends BasePrinter implements IPrinter {
 
     private StringBuffer printString;
 
@@ -56,39 +56,25 @@ public class WIFIPrinter implements IPrinter {
 
     @Override
     public void printText(String content) {
-        printText(content, TextSize.TEXT_SIZE_DEFAULT);
-    }
-
-    @Override
-    public void printText(String content, int textSize) {
-        printText(content, textSize, TextGravity.GRAVITY_LEFT);
-    }
-
-    @Override
-    public void printText(String content, int textSize, int gravity) {
-        getLocalGravity(gravity);
+        getLocalGravity();
         printString.append(content);
     }
+
+
 
     @Override
     public void printBarCode(String content) {
 
     }
 
-    @Override
-    public void printBarCode(String content, int textSize) {
 
-    }
 
     @Override
     public void printQRCode(String content) {
 
     }
 
-    @Override
-    public void printQRCode(String content, int textSize) {
 
-    }
 
     @Override
     public void printImage(Bitmap bitmap) {
@@ -98,6 +84,11 @@ public class WIFIPrinter implements IPrinter {
     @Override
     public void closePrinter(Context context) {
 
+    }
+
+    @Override
+    public void setPrintHelpData(HelpEntity helpEntity) {
+        setHelpEntity(helpEntity);
     }
 
     @Override
@@ -211,4 +202,13 @@ public class WIFIPrinter implements IPrinter {
         }
     }
 
+    @Override
+    protected void getLocalTextSize() {
+
+    }
+
+    @Override
+    protected void getLocalGravity() {
+        getLocalGravity(getHelpEntity().getGrivaty());
+    }
 }

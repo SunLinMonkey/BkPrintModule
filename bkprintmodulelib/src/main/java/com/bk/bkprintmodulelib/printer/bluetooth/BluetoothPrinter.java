@@ -8,21 +8,20 @@ import com.android.print.sdk.Barcode;
 import com.android.print.sdk.PrinterConstants;
 import com.android.print.sdk.PrinterInstance;
 import com.bk.bkprintmodulelib.cosntants.TextSize;
+import com.bk.bkprintmodulelib.factory.HelpEntityFactory;
 import com.bk.bkprintmodulelib.print_help.AbstractPrintStatus;
+import com.bk.bkprintmodulelib.print_help.HelpEntity;
 import com.bk.bkprintmodulelib.print_help.IPrinter;
+import com.bk.bkprintmodulelib.printer.BasePrinter;
 
 
 import java.io.File;
 import java.lang.ref.WeakReference;
 
-public class BluetoothPrinter implements IPrinter {
+public class BluetoothPrinter extends BasePrinter implements IPrinter {
     private IPrinterOpertion myOpertion;
     private PrinterInstance mPrinter;
 
-    private boolean isConnected = false;
-
-
-    private boolean isPrinterReady = false;
 
     class MyHandler extends android.os.Handler {
 
@@ -60,7 +59,7 @@ public class BluetoothPrinter implements IPrinter {
 
         private void initFailed() {
             if (listenerWeakReference != null && listenerWeakReference.get() != null) {
-                listenerWeakReference.get().onConnectFailed("","蓝牙初始化失败");
+                listenerWeakReference.get().onConnectFailed("", "蓝牙初始化失败");
             }
         }
 
@@ -123,53 +122,20 @@ public class BluetoothPrinter implements IPrinter {
 
     @Override
     public void printText(String content) {
-        printText(content, TextSize.TEXT_SIZE_DEFAULT);
-    }
-
-    @Override
-    public void printText(String content, int textSize) {
-        getLocalTextSize(textSize);
+        getLocalTextSize();
         mPrinter.printText(content);
     }
 
     @Override
-    public void printText(String content, int textSize, int gravity) {
-
-    }
-
-    @Override
     public void printBarCode(String content) {
-        printBarCode(content,TextSize.TEXT_SIZE_DEFAULT);
-    }
-
-    @Override
-    public void printBarCode(String content, int textSize) {
-
-//        public static final byte UPC_A = 0;
-//        public static final byte UPC_E = 1;
-//        public static final byte JAN13 = 2;
-//        public static final byte JAN8 = 3;
-//        public static final byte CODE39 = 4;
-//        public static final byte ITF = 5;
-//        public static final byte CODABAR = 6;
-//        public static final byte CODE93 = 72;
-//        public static final byte CODE128 = 73;
-//        public static final byte PDF417 = 100;
-//        public static final byte DATAMATRIX = 101;
-//        public static final byte QRCODE = 102;
-
         Barcode barcode = new Barcode(PrinterConstants.BarcodeType.CODE39, 2, 130, 20, content);
         mPrinter.setPrinter(PrinterConstants.Command.ALIGN, PrinterConstants.Command.ALIGN_CENTER);
         mPrinter.printBarCode(barcode);
     }
 
-    @Override
-    public void printQRCode(String content) {
-        printQRCode(content,TextSize.TEXT_SIZE_DEFAULT);
-    }
 
     @Override
-    public void printQRCode(String content, int textSize) {
+    public void printQRCode(String content) {
         Barcode barcode = new Barcode(PrinterConstants.BarcodeType.QRCODE, 2, 3, 6, content);
         mPrinter.setPrinter(PrinterConstants.Command.ALIGN, PrinterConstants.Command.ALIGN_CENTER);
         mPrinter.printBarCode(barcode);
@@ -183,6 +149,11 @@ public class BluetoothPrinter implements IPrinter {
     @Override
     public void closePrinter(Context context) {
         myOpertion.close();
+    }
+
+    @Override
+    public void setPrintHelpData(HelpEntity helpEntity) {
+        setHelpEntity(helpEntity);
     }
 
     @Override
@@ -226,11 +197,11 @@ public class BluetoothPrinter implements IPrinter {
     /**
      * 将通用字体大小转成本打印机实体类使用的字体大小
      *
-     * @param textSize
      * @return
      */
-    private void getLocalTextSize(int textSize) {
-        switch (textSize) {
+    protected void getLocalTextSize() {
+        HelpEntity helpEntity = getHelpEntity();
+        switch (helpEntity.getTestSize()) {
             case TextSize.TEXT_SIZE_DOWN_2:
             case TextSize.TEXT_SIZE_DOWN_1:
             case TextSize.TEXT_SIZE_DEFAULT: {
@@ -253,6 +224,11 @@ public class BluetoothPrinter implements IPrinter {
                 break;
             }
         }
+    }
+
+    @Override
+    protected void getLocalGravity() {
+
     }
 
 }

@@ -2,15 +2,19 @@ package com.bk.bkprintmodulelib;
 
 import android.app.Application;
 import android.content.Context;
+import android.support.v4.print.PrintHelper;
 import android.util.Log;
 import android.util.SparseArray;
 
 
 import com.bk.bkprintmodulelib.anotation.AnotationPrinterType;
 import com.bk.bkprintmodulelib.cosntants.CommandType;
+import com.bk.bkprintmodulelib.cosntants.TextGravity;
 import com.bk.bkprintmodulelib.factory.AbsDriversFactory;
 import com.bk.bkprintmodulelib.factory.DriversFactory;
+import com.bk.bkprintmodulelib.factory.HelpEntityFactory;
 import com.bk.bkprintmodulelib.print_help.AbstractPrintStatus;
+import com.bk.bkprintmodulelib.print_help.HelpEntity;
 import com.bk.bkprintmodulelib.print_help.IPrintDataAnalysis;
 import com.bk.bkprintmodulelib.print_help.IPrinter;
 import com.bk.bkprintmodulelib.print_help.PrintLineContentEntity;
@@ -30,15 +34,30 @@ public class PrinterManager {
     private ExecutorService produceSingleThreadExecutor;
     private ExecutorService consumerSingleThreadExecutor;
 
-    DataChannel channel;
+    private DataChannel channel;
 
     private PrinterManager() {
 
     }
 
-    public void init(Context context){
+    /**
+     * 初始化打印对象
+     *
+     * @param application
+     */
+    public void init(Context application) {
         AbsDriversFactory driversFactory = new DriversFactory();
-        pekonPrinters = driversFactory.getPekonPrinter(context);
+        pekonPrinters = driversFactory.getPekonPrinter(application);
+    }
+
+    /**
+     * 重新获取打印机类型
+     *
+     * @param application
+     */
+    public void reGetPrinter(Application application) {
+        AbsDriversFactory driversFactory = new DriversFactory();
+        pekonPrinters = driversFactory.getPekonPrinter(application.getApplicationContext());
     }
 
 
@@ -59,26 +78,30 @@ public class PrinterManager {
      * 开启生产消费模式
      */
     public void prepareLoop(Context context, AbstractPrintStatus abstractPrintStatus) {
-        channel = new DataChannelFIFOImpl();
-        produceSingleThreadExecutor = Executors.newSingleThreadExecutor();
-        consumerSingleThreadExecutor = Executors.newSingleThreadExecutor();
+        if (null == channel) {
+            channel = new DataChannelFIFOImpl();
+        }
+
+        if (null == produceSingleThreadExecutor) {
+            produceSingleThreadExecutor = Executors.newSingleThreadExecutor();
+        }
+
+        if (null == consumerSingleThreadExecutor) {
+            consumerSingleThreadExecutor = Executors.newSingleThreadExecutor();
+        }
+
         isInLoopModel = true;
         IPrinter pekonPrinter = pekonPrinters.valueAt(0);
         doPrinterWithCheck(context, null, abstractPrintStatus, pekonPrinter);
 
-
-            consumerSingleThreadExecutor.execute(getPrintRunnable(pekonPrinter, context, channel, abstractPrintStatus));
-
-
+        consumerSingleThreadExecutor.execute(getPrintRunnable(pekonPrinter, context, channel, abstractPrintStatus));
     }
 
     /**
      * 开启生产消费模式 下 生产打印内容
      */
     public void addPrintContent(IPrintDataAnalysis iPrintDataAnalysis) {
-        Log.e(TAG, "addPrintContent1111: " );
         if (isInLoopModel) {
-            Log.e(TAG, "addPrintContent2222: " );
             produceSingleThreadExecutor.execute(new ProductRunnable(iPrintDataAnalysis, channel));
         }
     }
@@ -100,7 +123,14 @@ public class PrinterManager {
         channel = null;
     }
 
-    public void printContent(final Context context, final IPrintDataAnalysis iPrintDatas, final AbstractPrintStatus abstractPrintStatus) {
+    /**
+     * 系统默认配置的打印
+     *
+     * @param context
+     * @param iPrintDatas
+     * @param abstractPrintStatus
+     */
+    public void printContent(Context context, IPrintDataAnalysis iPrintDatas, AbstractPrintStatus abstractPrintStatus) {
 
         if (isInLoopModel) {
             //生产者消费者模式不能掉用这个方法
@@ -108,7 +138,7 @@ public class PrinterManager {
             return;
         }
 
-        if (pekonPrinters==null||pekonPrinters.size() <= 0) {
+        if (pekonPrinters == null || pekonPrinters.size() <= 0) {
             return;
         }
 
@@ -126,7 +156,7 @@ public class PrinterManager {
      * @param iPrintDatas
      * @param abstractPrintStatus
      */
-    public void printContent(@AnotationPrinterType int printerType, final Context context, final IPrintDataAnalysis iPrintDatas, final AbstractPrintStatus abstractPrintStatus) {
+    public void printContent(Context context, @AnotationPrinterType int printerType, IPrintDataAnalysis iPrintDatas, AbstractPrintStatus abstractPrintStatus) {
         if (pekonPrinters.size() <= 0) {
             return;
         }
@@ -150,13 +180,15 @@ public class PrinterManager {
     private void doPrinterWithCheck(Context context, IPrintDataAnalysis iPrintDatas, AbstractPrintStatus abstractPrintStatus, IPrinter pekonPrinter) {
         if (!pekonPrinter.isConnected()) {
             doDriversConnection(context, iPrintDatas, abstractPrintStatus, pekonPrinter);
-        } else {
-            if (!pekonPrinter.isPrinterReady()) {
-                doInitPrinter(context, iPrintDatas, abstractPrintStatus, pekonPrinter);
-            } else {
-                printContentAfterPrinterInit(pekonPrinter, context, iPrintDatas, abstractPrintStatus);
-            }
+            return;
         }
+
+        if (!pekonPrinter.isPrinterReady()) {
+            doInitPrinter(context, iPrintDatas, abstractPrintStatus, pekonPrinter);
+        } else {
+            printContentAfterPrinterInit(context, pekonPrinter, iPrintDatas, abstractPrintStatus);
+        }
+
     }
 
     /**
@@ -221,7 +253,7 @@ public class PrinterManager {
             @Override
             public void onPrinterInitSucceed() {
                 super.onPrinterInitSucceed();
-                printContentAfterPrinterInit(pekonPrinter, context, iPrintDatas, abstractPrintStatus);
+                printContentAfterPrinterInit(context, pekonPrinter, iPrintDatas, abstractPrintStatus);
             }
         });
     }
@@ -234,16 +266,15 @@ public class PrinterManager {
      * @param iPrintDatas
      * @param abstractPrintStatus
      */
-    private void printContentAfterPrinterInit(IPrinter pekonPrinter, Context context, IPrintDataAnalysis iPrintDatas, AbstractPrintStatus abstractPrintStatus) {
+    private void printContentAfterPrinterInit(Context context, IPrinter pekonPrinter, IPrintDataAnalysis iPrintDatas, AbstractPrintStatus abstractPrintStatus) {
         if (!isInLoopModel) {//生产者消费者模式下，不需要直接打印
             printTestContent(pekonPrinter, context, iPrintDatas, abstractPrintStatus);
         }
     }
 
 
-    private void printTestContent(final IPrinter pekonPrinter, final Context context, final IPrintDataAnalysis iPrintDatas, final AbstractPrintStatus abstractPrintStatus) {
-        doPrint(pekonPrinter, context, iPrintDatas, abstractPrintStatus);
-
+    private void printTestContent(IPrinter pekonPrinter, Context context, IPrintDataAnalysis iPrintDatas, AbstractPrintStatus abstractPrintStatus) {
+        doPrint(context, pekonPrinter, iPrintDatas, abstractPrintStatus);
     }
 
     /**
@@ -254,14 +285,14 @@ public class PrinterManager {
      * @param iPrintDatas
      * @param abstractPrintStatus
      */
-    private void doPrint(final IPrinter pekonPrinter, final Context context, final IPrintDataAnalysis iPrintDatas, final AbstractPrintStatus abstractPrintStatus) {
+    private void doPrint(Context context, IPrinter pekonPrinter, IPrintDataAnalysis iPrintDatas, AbstractPrintStatus abstractPrintStatus) {
         new Thread(getPrintRunnable(pekonPrinter, context, iPrintDatas, abstractPrintStatus)).run();
     }
 
 
-    int i = 0;
     /**
      * 生产者消费者模式-获取打印内容
+     *
      * @param pekonPrinter
      * @param context
      * @param channel
@@ -273,8 +304,7 @@ public class PrinterManager {
             @Override
             public void run() {
                 try {
-                    while (true){
-                        Log.e(TAG, "run: " + i++);
+                    while (true) {
                         IPrintDataAnalysis iPrintDataAnalysis = channel.get();
                         List<PrintLineContentEntity> printDatas = iPrintDataAnalysis.getPrintDatas();
                         for (PrintLineContentEntity printData : printDatas) {
@@ -321,7 +351,8 @@ public class PrinterManager {
         //这里的case 记得排序，常用的在前面，不常用的在后面。能稍微提升速度
         switch (printLineContentEntity.getCommand()) {
             case CommandType.CMMAND_TEXT: {
-                pekonPrinter.printText(printLineContentEntity.getContent(), printLineContentEntity.getTextSize(), printLineContentEntity.getTextGrive());
+                pekonPrinter.setPrintHelpData(printLineContentEntity.getHelpEntity());
+                pekonPrinter.printText(printLineContentEntity.getContent());
                 break;
             }
             case CommandType.CMMAND_BLANKLINE: {
@@ -339,16 +370,19 @@ public class PrinterManager {
             }
 
             case CommandType.CMMAND_QRCODE: {
-                pekonPrinter.printQRCode(printLineContentEntity.getContent(), printLineContentEntity.getTextSize());
+                pekonPrinter.setPrintHelpData(printLineContentEntity.getHelpEntity());
+                pekonPrinter.printQRCode(printLineContentEntity.getContent());
                 break;
             }
 
             case CommandType.CMMAND_BARCODE: {
-                pekonPrinter.printBarCode(printLineContentEntity.getContent(), printLineContentEntity.getTextSize());
+                pekonPrinter.setPrintHelpData(printLineContentEntity.getHelpEntity());
+                pekonPrinter.printBarCode(printLineContentEntity.getContent());
                 break;
             }
 
             case CommandType.CMMAND_IMAGE: {
+                pekonPrinter.setPrintHelpData(printLineContentEntity.getHelpEntity());
                 pekonPrinter.printImage(printLineContentEntity.getBitmap());
                 break;
             }

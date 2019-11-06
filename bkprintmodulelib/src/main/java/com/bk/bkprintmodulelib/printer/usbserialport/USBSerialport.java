@@ -9,8 +9,11 @@ import com.bk.bkprintmodulelib.cosntants.EncodingFormat;
 import com.bk.bkprintmodulelib.cosntants.PrintCmd;
 import com.bk.bkprintmodulelib.cosntants.TextGravity;
 import com.bk.bkprintmodulelib.cosntants.TextSize;
+import com.bk.bkprintmodulelib.factory.HelpEntityFactory;
 import com.bk.bkprintmodulelib.print_help.AbstractPrintStatus;
+import com.bk.bkprintmodulelib.print_help.HelpEntity;
 import com.bk.bkprintmodulelib.print_help.IPrinter;
+import com.bk.bkprintmodulelib.printer.BasePrinter;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,7 +21,7 @@ import java.io.OutputStream;
 
 import android_serialport_api.SerialPort;
 
-public class USBSerialport implements IPrinter {
+public class USBSerialport extends BasePrinter implements IPrinter {
 
     private static final String TAG = "9527";
     private final String SERIAL_PROT_FILE_PATH = "/dev/ttyUSB0";
@@ -51,41 +54,25 @@ public class USBSerialport implements IPrinter {
 
     @Override
     public void printText(String content) {
-        printText(content, TextSize.TEXT_SIZE_DEFAULT);
-    }
-
-    @Override
-    public void printText(String content, int textSize) {
-        printText(content, textSize, TextGravity.GRAVITY_LEFT);
-    }
-
-    @Override
-    public void printText(String content, int textSize, int gravity) {
         try {
-            getLocalTextSize(textSize);
+            getLocalTextSize();
             pOutputStream.write(content.getBytes(EncodingFormat.FORMAT_GBK));
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
+
     @Override
     public void printBarCode(String content) {
 
     }
 
-    @Override
-    public void printBarCode(String content, int textSize) {
-
-    }
 
     @Override
     public void printQRCode(String content) {
     }
 
-    @Override
-    public void printQRCode(String content, int textSize) {
-    }
 
     @Override
     public void printImage(Bitmap bitmap) {
@@ -95,6 +82,11 @@ public class USBSerialport implements IPrinter {
     @Override
     public void closePrinter(Context context) {
         destroyPort();
+    }
+
+    @Override
+    public void setPrintHelpData(HelpEntity helpEntity) {
+        setHelpEntity(helpEntity);
     }
 
     @Override
@@ -189,7 +181,7 @@ public class USBSerialport implements IPrinter {
 
             case TextSize.TEXT_SIZE_UP_3: {
                 try {
-                    pOutputStream.write(PrintCmd.sizeBytes(1,1));
+                    pOutputStream.write(PrintCmd.sizeBytes(1, 1));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -198,7 +190,7 @@ public class USBSerialport implements IPrinter {
 
             case TextSize.TEXT_SIZE_UP_4: {
                 try {
-                    pOutputStream.write(PrintCmd.sizeBytes(2,2));
+                    pOutputStream.write(PrintCmd.sizeBytes(2, 2));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -207,7 +199,7 @@ public class USBSerialport implements IPrinter {
 
             default: {
                 try {
-                    pOutputStream.write(PrintCmd.sizeBytes(1,0));
+                    pOutputStream.write(PrintCmd.sizeBytes(1, 0));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -222,6 +214,16 @@ public class USBSerialport implements IPrinter {
      * @param gravity
      */
     private void getLocalGravity(int gravity) {
+
+    }
+
+    @Override
+    protected void getLocalTextSize() {
+        getLocalTextSize(getHelpEntity().getTestSize());
+    }
+
+    @Override
+    protected void getLocalGravity() {
 
     }
 }

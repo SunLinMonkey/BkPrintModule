@@ -9,6 +9,8 @@ import android.os.IBinder;
 import android.os.RemoteException;
 
 
+import com.bk.bkprintmodulelib.anotation.AnotationTextGravity;
+import com.bk.bkprintmodulelib.cosntants.TextGravity;
 import com.bk.bkprintmodulelib.print_help.ConnectionCallBack;
 import com.bk.bkprintmodulelib.print_help.ESCUtil;
 import com.bk.bkprintmodulelib.print_help.InitPrinterCallBack;
@@ -139,7 +141,7 @@ public class SummiAidlUtil {
     /**
      * 打印文字
      */
-    public void printText(String content, float size, boolean isBold, boolean isAlignCenter, boolean isUnderLine, ICallback callback) {
+    public void printText(String content, float size, boolean isBold, @AnotationTextGravity int gravity, boolean isUnderLine, ICallback callback) {
         try {
             if (isBold) {
                 woyouService.sendRAWData(ESCUtil.boldOn(), null);
@@ -153,9 +155,12 @@ public class SummiAidlUtil {
                 woyouService.sendRAWData(ESCUtil.underlineOff(), null);
             }
 
-            if (isAlignCenter) {
+
+            if (TextGravity.GRAVITY_CENTER == gravity){
                 woyouService.sendRAWData(ESCUtil.alignCenter(), null);
-            } else {
+            }else if (TextGravity.GRAVITY_RIGHT == gravity){
+                woyouService.sendRAWData(ESCUtil.alignRight(), null);
+            }else{
                 woyouService.sendRAWData(ESCUtil.alignLeft(), null);
             }
 

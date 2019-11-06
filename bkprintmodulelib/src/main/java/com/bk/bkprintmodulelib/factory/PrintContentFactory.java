@@ -3,6 +3,7 @@ package com.bk.bkprintmodulelib.factory;
 import android.graphics.Bitmap;
 
 import com.bk.bkprintmodulelib.cosntants.CommandType;
+import com.bk.bkprintmodulelib.print_help.HelpEntity;
 import com.bk.bkprintmodulelib.print_help.PrintLineContentEntity;
 
 
@@ -11,13 +12,28 @@ import com.bk.bkprintmodulelib.print_help.PrintLineContentEntity;
  */
 public class PrintContentFactory {
 
+    public static PrintLineContentEntity createText(String text, int textSize, int textGravity, boolean isNeedUnderLine, boolean isNeedBold) {
+        PrintLineContentEntity printLineContentEntity = new PrintLineContentEntity();
+        printLineContentEntity.setCommand(CommandType.CMMAND_TEXT);
+        printLineContentEntity.setContent(text);
+        HelpEntity defaultHelpEntity = HelpEntityFactory.getDefaultHelpEntity();
+        defaultHelpEntity.setGrivaty(textGravity);
+        defaultHelpEntity.setBold(isNeedBold);
+        defaultHelpEntity.setNeedUnderLine(isNeedUnderLine);
+        defaultHelpEntity.setTestSize(textSize);
+        printLineContentEntity.setHelpEntity(defaultHelpEntity);
+        return printLineContentEntity;
+    }
+
 
     public static PrintLineContentEntity createText(String text, int textSize, int textGravity) {
         PrintLineContentEntity printLineContentEntity = new PrintLineContentEntity();
         printLineContentEntity.setCommand(CommandType.CMMAND_TEXT);
         printLineContentEntity.setContent(text);
-        printLineContentEntity.setTextGrive(textGravity);
-        printLineContentEntity.setTextSize(textSize);
+        HelpEntity defaultHelpEntity = HelpEntityFactory.getDefaultHelpEntity();
+        defaultHelpEntity.setGrivaty(textGravity);
+        defaultHelpEntity.setTestSize(textSize);
+        printLineContentEntity.setHelpEntity(defaultHelpEntity);
         return printLineContentEntity;
     }
 
@@ -26,7 +42,9 @@ public class PrintContentFactory {
         PrintLineContentEntity printLineContentEntity = new PrintLineContentEntity();
         printLineContentEntity.setCommand(CommandType.CMMAND_TEXT);
         printLineContentEntity.setContent(text);
-        printLineContentEntity.setTextSize(textSize);
+        HelpEntity defaultHelpEntity = HelpEntityFactory.getDefaultHelpEntity();
+        defaultHelpEntity.setTestSize(textSize);
+        printLineContentEntity.setHelpEntity(defaultHelpEntity);
         return printLineContentEntity;
     }
 
@@ -63,7 +81,9 @@ public class PrintContentFactory {
         PrintLineContentEntity printLineContentEntity = new PrintLineContentEntity();
         printLineContentEntity.setCommand(CommandType.CMMAND_QRCODE);
         printLineContentEntity.setContent(content);
-        printLineContentEntity.setTextSize(textSize);
+        HelpEntity defaultHelpEntity = HelpEntityFactory.getDefaultHelpEntity();
+        defaultHelpEntity.setTestSize(textSize);
+        printLineContentEntity.setHelpEntity(defaultHelpEntity);
         return printLineContentEntity;
     }
 
@@ -76,20 +96,13 @@ public class PrintContentFactory {
     }
 
 
-    public static PrintLineContentEntity createBarCode(String content, int textSize) {
-        PrintLineContentEntity printLineContentEntity = new PrintLineContentEntity();
-        printLineContentEntity.setCommand(CommandType.CMMAND_BARCODE);
-        printLineContentEntity.setContent(content);
-        printLineContentEntity.setTextSize(textSize);
-        return printLineContentEntity;
-    }
-
-
     public static PrintLineContentEntity createImage(Bitmap content, int textSize) {
         PrintLineContentEntity printLineContentEntity = new PrintLineContentEntity();
         printLineContentEntity.setCommand(CommandType.CMMAND_IMAGE);
         printLineContentEntity.setBitmap(content);
-        printLineContentEntity.setTextSize(textSize);
+        HelpEntity defaultHelpEntity = HelpEntityFactory.getDefaultHelpEntity();
+        defaultHelpEntity.setTestSize(textSize);
+        printLineContentEntity.setHelpEntity(defaultHelpEntity);
         return printLineContentEntity;
     }
 

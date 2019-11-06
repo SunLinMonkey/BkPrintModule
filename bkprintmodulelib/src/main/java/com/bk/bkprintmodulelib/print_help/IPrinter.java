@@ -3,9 +3,6 @@ package com.bk.bkprintmodulelib.print_help;
 import android.content.Context;
 import android.graphics.Bitmap;
 
-import com.bk.bkprintmodulelib.anotation.AnotationPrintTextSize;
-import com.bk.bkprintmodulelib.anotation.AnotationTextGravity;
-
 
 public interface IPrinter {
 
@@ -32,23 +29,7 @@ public interface IPrinter {
      */
     void printText(String content);
 
-    /**
-     * 打印文字
-     *
-     * @param content  打印内容
-     * @param textSize 打印字体大小
-     */
-    void printText(String content, @AnotationPrintTextSize int textSize);
 
-
-    /**
-     * 打印文字
-     *
-     * @param content  打印内容
-     * @param textSize 打印字体大小
-     * @param gravity 打印位置
-     */
-    void printText(String content, @AnotationPrintTextSize int textSize, @AnotationTextGravity int gravity);
     /**
      * 打印一维码
      *
@@ -56,13 +37,6 @@ public interface IPrinter {
      */
     void printBarCode(String content);
 
-    /**
-     * 打印一维码
-     *
-     * @param content  打印内容
-     * @param textSize 打印一维码大小
-     */
-    void printBarCode(String content, @AnotationPrintTextSize int textSize);
 
     /**
      * 打印二维码
@@ -71,20 +45,14 @@ public interface IPrinter {
      */
     void printQRCode(String content);
 
-    /**
-     * 打印二维码
-     *
-     * @param content  打印内容
-     * @param textSize 打印二维码大小
-     */
-    void printQRCode(String content, @AnotationPrintTextSize int textSize);
-
 
     void printImage(Bitmap bitmap);
 
 
     void closePrinter(Context context);
 
+
+    void setPrintHelpData(HelpEntity helpEntity);
 
     /**
      * 打印多行空白行

@@ -8,9 +8,12 @@ import android.widget.Toast;
 import com.bk.bkprintmodulelib.cosntants.EncodingFormat;
 import com.bk.bkprintmodulelib.cosntants.TextGravity;
 import com.bk.bkprintmodulelib.cosntants.TextSize;
+import com.bk.bkprintmodulelib.factory.HelpEntityFactory;
 import com.bk.bkprintmodulelib.print_help.AbstractPrintStatus;
 import com.bk.bkprintmodulelib.print_help.AsyncGetPrinterTask;
+import com.bk.bkprintmodulelib.print_help.HelpEntity;
 import com.bk.bkprintmodulelib.print_help.IPrinter;
+import com.bk.bkprintmodulelib.printer.BasePrinter;
 import com.starmicronics.stario.PortInfo;
 import com.starmicronics.starioextension.ICommandBuilder;
 import com.starmicronics.starioextension.StarIoExt;
@@ -18,7 +21,7 @@ import com.starmicronics.starioextension.StarIoExt;
 import java.nio.charset.Charset;
 import java.util.List;
 
-public class StartWIFIPrinter implements IPrinter {
+public class StartWIFIPrinter extends BasePrinter implements IPrinter {
 
     private Charset encoding = Charset.forName(EncodingFormat.FORMAT_GB2312);  //中文字体不乱码
     private PrinterSettings settings;
@@ -100,28 +103,14 @@ public class StartWIFIPrinter implements IPrinter {
 
     @Override
     public void printText(String content) {
-        printText(content, TextSize.TEXT_SIZE_DEFAULT);
-    }
-
-    @Override
-    public void printText(String content, int textSize) {
-        printText(content, textSize, TextGravity.GRAVITY_LEFT);
-    }
-
-    @Override
-    public void printText(String content, int textSize, int gravity) {
-        getLocalTextSize(textSize);
-        getLocalGravity(gravity);
+        getLocalTextSize();
+        getLocalGravity();
         builder.append(content.getBytes(encoding));
     }
 
+
     @Override
     public void printBarCode(String content) {
-
-    }
-
-    @Override
-    public void printBarCode(String content, int textSize) {
 
     }
 
@@ -130,10 +119,6 @@ public class StartWIFIPrinter implements IPrinter {
 
     }
 
-    @Override
-    public void printQRCode(String content, int textSize) {
-
-    }
 
     @Override
     public void printImage(Bitmap bitmap) {
@@ -143,6 +128,11 @@ public class StartWIFIPrinter implements IPrinter {
     @Override
     public void closePrinter(Context context) {
 
+    }
+
+    @Override
+    public void setPrintHelpData(HelpEntity helpEntity) {
+        setHelpEntity(helpEntity);
     }
 
     @Override
@@ -285,4 +275,13 @@ public class StartWIFIPrinter implements IPrinter {
         }
     };
 
+    @Override
+    protected void getLocalTextSize() {
+        getLocalTextSize(getHelpEntity().getTestSize());
+    }
+
+    @Override
+    protected void getLocalGravity() {
+        getLocalGravity(getHelpEntity().getGrivaty());
+    }
 }
