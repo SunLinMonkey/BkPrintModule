@@ -7,7 +7,9 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.bk.bkprintmodulelib.PrinterManager;
+import com.bk.bkprintmodulelib.cosntants.PekonPrinterType;
 import com.bk.bkprintmodulelib.print_help.AbstractPrintStatus;
+import com.bk.bkprintmodulelib.print_help.SharedPrefUtil;
 
 
 public class MainActivity extends Activity {
@@ -19,6 +21,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        SharedPrefUtil.getInstance().setMainPrinter(PekonPrinterType.BLUETOOTH,this);
         PrinterManager.getInstance().init(this);
 
 //        PrinterManager.getInstance().prepareLoop(this, new AbstractPrintStatus() {

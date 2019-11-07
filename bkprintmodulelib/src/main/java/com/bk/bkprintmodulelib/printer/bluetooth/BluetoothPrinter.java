@@ -45,6 +45,7 @@ public class BluetoothPrinter extends BasePrinter implements IPrinter {
                         initSucceed();
                     } else {
                         initFailed();
+
                     }
                     break;
                 case PrinterConstants.Connect.FAILED:
@@ -61,9 +62,11 @@ public class BluetoothPrinter extends BasePrinter implements IPrinter {
             if (listenerWeakReference != null && listenerWeakReference.get() != null) {
                 listenerWeakReference.get().onConnectFailed("", "蓝牙初始化失败");
             }
+            isConnected = false;
         }
 
         private void initSucceed() {
+            isConnected= true;
             if (listenerWeakReference != null && listenerWeakReference.get() != null) {
                 listenerWeakReference.get().onConnectSucceed();
             }
@@ -88,8 +91,12 @@ public class BluetoothPrinter extends BasePrinter implements IPrinter {
             isConnected = false;
             btSetting(context, mHandler);
         } else {
-            myOpertion = new BluetoothOperation(context, mHandler);
-            myOpertion.btAutoConn(context, mHandler);
+            if (!isConnected){
+                myOpertion = new BluetoothOperation(context, mHandler);
+                myOpertion.btAutoConn(context, mHandler);
+            }else{
+                listener.onConnectSucceed();
+            }
         }
     }
 
