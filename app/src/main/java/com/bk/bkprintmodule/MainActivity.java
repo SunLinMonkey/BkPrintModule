@@ -21,7 +21,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        SharedPrefUtil.getInstance().setMainPrinter(PekonPrinterType.BLUETOOTH,this);
+        SharedPrefUtil.getInstance().setMainPrinter(PekonPrinterType.PRINTER_PARTNERPRINT,this);
         PrinterManager.getInstance().init(this);
 
 //        PrinterManager.getInstance().prepareLoop(this, new AbstractPrintStatus() {

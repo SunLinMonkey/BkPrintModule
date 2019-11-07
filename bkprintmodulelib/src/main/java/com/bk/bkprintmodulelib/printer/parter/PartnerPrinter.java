@@ -3,6 +3,7 @@ package com.bk.bkprintmodulelib.printer.parter;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.util.Log;
+import android.view.Gravity;
 
 
 import com.bk.bkprintmodulelib.cosntants.PrintCmd;
@@ -54,6 +55,8 @@ public class PartnerPrinter extends BasePrinter implements IPrinter {
     @Override
     public void printText(String content) {
         try {
+            getLocalTextSize();
+            getLocalGravity();
             pOutputStream.write(content.getBytes("GBK"));
         } catch (IOException e) {
             e.printStackTrace();
@@ -195,11 +198,104 @@ public class PartnerPrinter extends BasePrinter implements IPrinter {
 
     @Override
     protected void getLocalTextSize() {
-
+        try {
+            pOutputStream.write(size(getHelpEntity().getTestSize()).getBytes("gbk"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     protected void getLocalGravity() {
+        try {
+            pOutputStream.write(gravity(getHelpEntity().getGrivaty()).getBytes("gbk"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
+
+
+    /**
+     * 该命令在打印区域执行的排列方式
+     * 设定该命令前打印缓冲区必须无打印数据
+     * 设定该命令后设定绝对打印则绝对打印无效数据按排列方式打印。
+     * 设定了绝对打印再设排列方式，则排列方式无效数据按绝对打印位置打印。该命令与绝对打印关系：谁先设谁有效。
+     * 注意绝对打印只是当前行有效，排列方式是设定后不改变则一直有效
+     * 0或48靠左，1或49居中，2或50居右
+     *
+     * @param gravity 排列方式
+     * @return 排列
+     */
+    public static String gravity(int gravity) {
+        byte gravityByte = 0;
+
+        switch (gravity) {
+            case TextGravity.GRAVITY_LEFT:
+                gravityByte = 0;
+                break;
+            case TextGravity.GRAVITY_CENTER:
+                gravityByte = 1;
+                break;
+            case TextGravity.GRAVITY_RIGHT:
+                gravityByte = 2;
+                break;
+            default:
+                gravityByte = 0;
+
+                break;
+        }
+        byte[] byteArray = new byte[3];
+        byteArray[0] = 27;
+        byteArray[1] = 97;
+        byteArray[2] = gravityByte;
+        return new String(byteArray);
+    }
+
+    /**
+     * 范围(0≤n≤255)（1≤垂直倍数≤8，1≤水平倍数≤8）
+     * 选择字符高度使用位0到2 和选择字符宽度使用位4到7，
+     *
+     * @param textSize
+     * @return 字体大小
+     */
+    public static String size(int textSize) {
+
+        int widthMultiple;
+        int heightMultiple;
+        switch (textSize) {
+            case TextSize.TEXT_SIZE_DOWN_2:
+            case TextSize.TEXT_SIZE_DOWN_1:
+            case TextSize.TEXT_SIZE_DEFAULT: {
+                heightMultiple = 1;
+                widthMultiple = 1;
+                break;
+            }
+
+            case TextSize.TEXT_SIZE_UP_3: {
+                heightMultiple = 2;
+                widthMultiple = 2;
+                break;
+            }
+
+            case TextSize.TEXT_SIZE_UP_4: {
+                heightMultiple = 3;
+                widthMultiple = 3;
+                break;
+            }
+
+            default: {
+                heightMultiple = 1;
+                widthMultiple = 1;
+                break;
+            }
+        }
+
+        byte[] byteArray = new byte[3];
+        byteArray[0] = 29;
+        byteArray[1] = 33;
+        byteArray[2] = (byte) ((widthMultiple - 1) * 16 + (heightMultiple - 1));
+        return new String(byteArray);
+    }
+
 }
