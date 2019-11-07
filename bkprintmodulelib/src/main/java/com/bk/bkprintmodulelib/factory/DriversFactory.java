@@ -14,6 +14,7 @@ import com.bk.bkprintmodulelib.printer.summi.SummiPrinter;
 import com.bk.bkprintmodulelib.printer.usb.USBPrinter;
 import com.bk.bkprintmodulelib.printer.usbparallelport.USBParallelPortPrinter;
 import com.bk.bkprintmodulelib.printer.usbserialport.USBSerialport;
+import com.bk.bkprintmodulelib.printer.wifi.WIFIPrinter;
 
 
 public class DriversFactory extends AbsDriversFactory {
@@ -42,7 +43,7 @@ public class DriversFactory extends AbsDriversFactory {
 
         switch (printerType) {
             case PekonPrinterType.PRINTER_WIFI: {
-                IPrinter iPrinter = new StartWIFIPrinter();
+                IPrinter iPrinter = new WIFIPrinter();
                 printers.put(PekonPrinterType.PRINTER_WIFI, iPrinter);
                 break;
             }
@@ -76,6 +77,12 @@ public class DriversFactory extends AbsDriversFactory {
             case PekonPrinterType.PRINTER_USB: {
                 IPrinter iPrinter = new USBPrinter();
                 printers.put(PekonPrinterType.PRINTER_USB, iPrinter);
+                break;
+            }
+
+            case PekonPrinterType.PRINTER_START_WIFI: {
+                IPrinter iPrinter = new StartWIFIPrinter();
+                printers.put(PekonPrinterType.PRINTER_START_WIFI, iPrinter);
                 break;
             }
 

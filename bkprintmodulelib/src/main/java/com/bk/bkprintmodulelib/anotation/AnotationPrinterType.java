@@ -26,7 +26,8 @@ import java.lang.annotation.RetentionPolicy;
 @IntDef({PekonPrinterType.PRINTER_WIFI, PekonPrinterType.BLUETOOTH, PekonPrinterType.PRINTER_USB_SERIAL
         , PekonPrinterType.PRINTER_USB_PARALLEL, PekonPrinterType.PRINTER_MS_WIFI
         , PekonPrinterType.PRINTER_LDPRINT, PekonPrinterType.PRINTER_BLUETOOTH_BOX
-        , PekonPrinterType.PRINTER_PARTNERPRINT, PekonPrinterType.PRINTER_USB, PekonPrinterType.PRINTER_SUMMI})
+        , PekonPrinterType.PRINTER_PARTNERPRINT, PekonPrinterType.PRINTER_USB, PekonPrinterType.PRINTER_SUMMI
+        , PekonPrinterType.PRINTER_START_WIFI})
 @Retention(RetentionPolicy.SOURCE)
 public @interface AnotationPrinterType {
 }

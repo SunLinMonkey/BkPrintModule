@@ -2,22 +2,18 @@ package com.bk.bkprintmodulelib;
 
 import android.app.Application;
 import android.content.Context;
-import android.support.v4.print.PrintHelper;
 import android.util.Log;
 import android.util.SparseArray;
 
-
 import com.bk.bkprintmodulelib.anotation.AnotationPrinterType;
 import com.bk.bkprintmodulelib.cosntants.CommandType;
-import com.bk.bkprintmodulelib.cosntants.TextGravity;
 import com.bk.bkprintmodulelib.factory.AbsDriversFactory;
 import com.bk.bkprintmodulelib.factory.DriversFactory;
-import com.bk.bkprintmodulelib.factory.HelpEntityFactory;
 import com.bk.bkprintmodulelib.print_help.AbstractPrintStatus;
-import com.bk.bkprintmodulelib.print_help.HelpEntity;
 import com.bk.bkprintmodulelib.print_help.IPrintDataAnalysis;
 import com.bk.bkprintmodulelib.print_help.IPrinter;
 import com.bk.bkprintmodulelib.print_help.PrintLineContentEntity;
+import com.bk.bkprintmodulelib.print_help.SharedPrefUtil;
 import com.bk.bkprintmodulelib.support_cp.DataChannel;
 import com.bk.bkprintmodulelib.support_cp.DataChannelFIFOImpl;
 import com.bk.bkprintmodulelib.support_cp.ProductRunnable;
@@ -36,8 +32,34 @@ public class PrinterManager {
 
     private DataChannel channel;
 
+    /**
+     * 默认打印张数
+     */
+    private final int DEAFAULT_PRINT_NUM = 1;
+
     private PrinterManager() {
 
+    }
+
+
+    /**
+     * 保存设置的主打印机
+     *
+     * @param context
+     * @param printer
+     */
+    public void saveMainPrinter(Context context, @AnotationPrinterType int printer) {
+        SharedPrefUtil.getInstance().setMainPrinter(printer, context);
+    }
+
+    /**
+     * 保存设置的副印机
+     *
+     * @param context
+     * @param printer
+     */
+    public void saveHelpPrinter(Context context, @AnotationPrinterType int printer) {
+        SharedPrefUtil.getInstance().setHelpPrinter(printer, context);
     }
 
     /**
@@ -92,7 +114,7 @@ public class PrinterManager {
 
         isInLoopModel = true;
         IPrinter pekonPrinter = pekonPrinters.valueAt(0);
-        doPrinterWithCheck(context, null, abstractPrintStatus, pekonPrinter);
+        doPrinterWithCheck(context, null, DEAFAULT_PRINT_NUM, abstractPrintStatus, pekonPrinter);
 
         consumerSingleThreadExecutor.execute(getPrintRunnable(pekonPrinter, context, channel, abstractPrintStatus));
     }
@@ -144,7 +166,33 @@ public class PrinterManager {
 
         for (int i = 0; i < pekonPrinters.size(); i++) {
             IPrinter pekonPrinter = pekonPrinters.valueAt(i);
-            doPrinterWithCheck(context, iPrintDatas, abstractPrintStatus, pekonPrinter);
+            doPrinterWithCheck(context, iPrintDatas, DEAFAULT_PRINT_NUM, abstractPrintStatus, pekonPrinter);
+        }
+    }
+
+    /**
+     * 系统默认配置的打印
+     *
+     * @param context
+     * @param iPrintDatas         打印封装数据
+     * @param printNum            打印次数
+     * @param abstractPrintStatus
+     */
+    public void printContent(Context context, IPrintDataAnalysis iPrintDatas, int printNum, AbstractPrintStatus abstractPrintStatus) {
+
+        if (isInLoopModel) {
+            //生产者消费者模式不能掉用这个方法
+//            throw new RuntimeException("生产者消费者模式下，该方法不能调用。");
+            return;
+        }
+
+        if (pekonPrinters == null || pekonPrinters.size() <= 0) {
+            return;
+        }
+
+        for (int i = 0; i < pekonPrinters.size(); i++) {
+            IPrinter pekonPrinter = pekonPrinters.valueAt(i);
+            doPrinterWithCheck(context, iPrintDatas, printNum, abstractPrintStatus, pekonPrinter);
         }
     }
 
@@ -156,7 +204,7 @@ public class PrinterManager {
      * @param iPrintDatas
      * @param abstractPrintStatus
      */
-    public void printContent(Context context, @AnotationPrinterType int printerType, IPrintDataAnalysis iPrintDatas, AbstractPrintStatus abstractPrintStatus) {
+    public void printContent(Context context, @AnotationPrinterType int printerType, IPrintDataAnalysis iPrintDatas, int printNums, AbstractPrintStatus abstractPrintStatus) {
         if (pekonPrinters.size() <= 0) {
             return;
         }
@@ -165,7 +213,7 @@ public class PrinterManager {
             Log.e("9527", "不支持或未配置改打印方式");
             return;
         }
-        doPrinterWithCheck(context, iPrintDatas, abstractPrintStatus, pekonPrinter);
+        doPrinterWithCheck(context, iPrintDatas, printNums, abstractPrintStatus, pekonPrinter);
 
     }
 
@@ -177,16 +225,16 @@ public class PrinterManager {
      * @param abstractPrintStatus
      * @param pekonPrinter
      */
-    private void doPrinterWithCheck(Context context, IPrintDataAnalysis iPrintDatas, AbstractPrintStatus abstractPrintStatus, IPrinter pekonPrinter) {
+    private void doPrinterWithCheck(Context context, IPrintDataAnalysis iPrintDatas, int printNums, AbstractPrintStatus abstractPrintStatus, IPrinter pekonPrinter) {
         if (!pekonPrinter.isConnected()) {
-            doDriversConnection(context, iPrintDatas, abstractPrintStatus, pekonPrinter);
+            doDriversConnection(context, iPrintDatas, printNums, abstractPrintStatus, pekonPrinter);
             return;
         }
 
         if (!pekonPrinter.isPrinterReady()) {
-            doInitPrinter(context, iPrintDatas, abstractPrintStatus, pekonPrinter);
+            doInitPrinter(context, iPrintDatas, printNums, abstractPrintStatus, pekonPrinter);
         } else {
-            printContentAfterPrinterInit(context, pekonPrinter, iPrintDatas, abstractPrintStatus);
+            printContentAfterPrinterInit(context, pekonPrinter, iPrintDatas, printNums, abstractPrintStatus);
         }
 
     }
@@ -196,10 +244,11 @@ public class PrinterManager {
      *
      * @param context
      * @param iPrintDatas
+     * @param printNums
      * @param abstractPrintStatus
      * @param pekonPrinter
      */
-    private void doDriversConnection(final Context context, final IPrintDataAnalysis iPrintDatas, final AbstractPrintStatus abstractPrintStatus, final IPrinter pekonPrinter) {
+    private void doDriversConnection(final Context context, final IPrintDataAnalysis iPrintDatas, final int printNums, final AbstractPrintStatus abstractPrintStatus, final IPrinter pekonPrinter) {
         pekonPrinter.initPrintConnection(context, new AbstractPrintStatus() {
             @Override
             public void onPrinterFinished() {
@@ -215,7 +264,7 @@ public class PrinterManager {
             public void onConnectSucceed() {
                 Log.e("9527", "2222onConnectSucceed: ");
                 super.onConnectSucceed();
-                doInitPrinter(context, iPrintDatas, abstractPrintStatus, pekonPrinter);
+                doInitPrinter(context, iPrintDatas, printNums, abstractPrintStatus, pekonPrinter);
             }
 
             @Override
@@ -230,10 +279,11 @@ public class PrinterManager {
      *
      * @param context
      * @param iPrintDatas
+     * @param printNums
      * @param abstractPrintStatus
      * @param pekonPrinter
      */
-    private void doInitPrinter(final Context context, final IPrintDataAnalysis iPrintDatas, final AbstractPrintStatus abstractPrintStatus, final IPrinter pekonPrinter) {
+    private void doInitPrinter(final Context context, final IPrintDataAnalysis iPrintDatas, final int printNums, final AbstractPrintStatus abstractPrintStatus, final IPrinter pekonPrinter) {
         initPrinter(pekonPrinter, context, new AbstractPrintStatus() {
             @Override
             public void onPrinterFinished() {
@@ -253,7 +303,7 @@ public class PrinterManager {
             @Override
             public void onPrinterInitSucceed() {
                 super.onPrinterInitSucceed();
-                printContentAfterPrinterInit(context, pekonPrinter, iPrintDatas, abstractPrintStatus);
+                printContentAfterPrinterInit(context, pekonPrinter, iPrintDatas, printNums, abstractPrintStatus);
             }
         });
     }
@@ -261,20 +311,23 @@ public class PrinterManager {
     /**
      * 在打印机初始化后，直接打印
      *
-     * @param pekonPrinter
      * @param context
+     * @param pekonPrinter
      * @param iPrintDatas
+     * @param printNums
      * @param abstractPrintStatus
      */
-    private void printContentAfterPrinterInit(Context context, IPrinter pekonPrinter, IPrintDataAnalysis iPrintDatas, AbstractPrintStatus abstractPrintStatus) {
+    private void printContentAfterPrinterInit(Context context, IPrinter pekonPrinter, IPrintDataAnalysis iPrintDatas, int printNums, AbstractPrintStatus abstractPrintStatus) {
         if (!isInLoopModel) {//生产者消费者模式下，不需要直接打印
-            printTestContent(pekonPrinter, context, iPrintDatas, abstractPrintStatus);
+            printContent(context, pekonPrinter, iPrintDatas, printNums, abstractPrintStatus);
         }
     }
 
 
-    private void printTestContent(IPrinter pekonPrinter, Context context, IPrintDataAnalysis iPrintDatas, AbstractPrintStatus abstractPrintStatus) {
-        doPrint(context, pekonPrinter, iPrintDatas, abstractPrintStatus);
+    private void printContent(Context context, IPrinter pekonPrinter, IPrintDataAnalysis iPrintDatas, int printNums, AbstractPrintStatus abstractPrintStatus) {
+        for (int nums = printNums; nums > 0; nums--) {
+            doPrint(context, pekonPrinter, iPrintDatas, nums, abstractPrintStatus);
+        }
     }
 
     /**
@@ -285,8 +338,8 @@ public class PrinterManager {
      * @param iPrintDatas
      * @param abstractPrintStatus
      */
-    private void doPrint(Context context, IPrinter pekonPrinter, IPrintDataAnalysis iPrintDatas, AbstractPrintStatus abstractPrintStatus) {
-        new Thread(getPrintRunnable(pekonPrinter, context, iPrintDatas, abstractPrintStatus)).run();
+    private void doPrint(Context context, IPrinter pekonPrinter, IPrintDataAnalysis iPrintDatas,int printNums, AbstractPrintStatus abstractPrintStatus) {
+        new Thread(getPrintRunnable(pekonPrinter, context, iPrintDatas,printNums, abstractPrintStatus)).run();
     }
 
 
@@ -308,7 +361,7 @@ public class PrinterManager {
                         IPrintDataAnalysis iPrintDataAnalysis = channel.get();
                         List<PrintLineContentEntity> printDatas = iPrintDataAnalysis.getPrintDatas();
                         for (PrintLineContentEntity printData : printDatas) {
-                            analysisContent(context, pekonPrinter, printData);
+                            analysisContent(context, pekonPrinter, printData, DEAFAULT_PRINT_NUM);
                         }
                         abstractPrintStatus.onPrinterFinished();
                     }
@@ -321,14 +374,14 @@ public class PrinterManager {
     }
 
 
-    private Runnable getPrintRunnable(final IPrinter pekonPrinter, final Context context, final IPrintDataAnalysis iPrintDatas, final AbstractPrintStatus abstractPrintStatus) {
+    private Runnable getPrintRunnable(final IPrinter pekonPrinter, final Context context, final IPrintDataAnalysis iPrintDatas, final int printNums, final AbstractPrintStatus abstractPrintStatus) {
         return new Runnable() {
             @Override
             public void run() {
                 try {
                     List<PrintLineContentEntity> printDatas = iPrintDatas.getPrintDatas();
                     for (PrintLineContentEntity printData : printDatas) {
-                        analysisContent(context, pekonPrinter, printData);
+                        analysisContent(context, pekonPrinter, printData,printNums);
                     }
                     abstractPrintStatus.onPrinterFinished();
                 } catch (Exception e) {
@@ -341,12 +394,12 @@ public class PrinterManager {
 
     /**
      * 解析-分发打印行内容
-     *
-     * @param context
+     *  @param context
      * @param pekonPrinter           打印机
      * @param printLineContentEntity 打印行对象
+     * @param printNums
      */
-    private void analysisContent(Context context, IPrinter pekonPrinter, PrintLineContentEntity printLineContentEntity) {
+    private void analysisContent(Context context, IPrinter pekonPrinter, PrintLineContentEntity printLineContentEntity, int printNums) {
 
         //这里的case 记得排序，常用的在前面，不常用的在后面。能稍微提升速度
         switch (printLineContentEntity.getCommand()) {
@@ -393,7 +446,9 @@ public class PrinterManager {
             }
 
             case CommandType.CMMAND_CASHBOX: {
-                pekonPrinter.openCashBox();
+                if (printNums == 1) {//表示最后一联的打印
+                    pekonPrinter.openCashBox();
+                }
                 break;
             }
             default: {
