@@ -7,13 +7,12 @@ import android.os.Message;
 import com.android.print.sdk.Barcode;
 import com.android.print.sdk.PrinterConstants;
 import com.android.print.sdk.PrinterInstance;
+import com.bk.bkprintmodulelib.cosntants.TextGravity;
 import com.bk.bkprintmodulelib.cosntants.TextSize;
-import com.bk.bkprintmodulelib.factory.HelpEntityFactory;
 import com.bk.bkprintmodulelib.print_help.AbstractPrintStatus;
 import com.bk.bkprintmodulelib.print_help.HelpEntity;
 import com.bk.bkprintmodulelib.print_help.IPrinter;
 import com.bk.bkprintmodulelib.printer.BasePrinter;
-
 
 import java.io.File;
 import java.lang.ref.WeakReference;
@@ -66,7 +65,7 @@ public class BluetoothPrinter extends BasePrinter implements IPrinter {
         }
 
         private void initSucceed() {
-            isConnected= true;
+            isConnected = true;
             if (listenerWeakReference != null && listenerWeakReference.get() != null) {
                 listenerWeakReference.get().onConnectSucceed();
             }
@@ -91,10 +90,10 @@ public class BluetoothPrinter extends BasePrinter implements IPrinter {
             isConnected = false;
             btSetting(context, mHandler);
         } else {
-            if (!isConnected){
+            if (!isConnected) {
                 myOpertion = new BluetoothOperation(context, mHandler);
                 myOpertion.btAutoConn(context, mHandler);
-            }else{
+            } else {
                 listener.onConnectSucceed();
             }
         }
@@ -130,6 +129,7 @@ public class BluetoothPrinter extends BasePrinter implements IPrinter {
     @Override
     public void printText(String content) {
         getLocalTextSize();
+        getLocalGravity();
         mPrinter.printText(content);
     }
 
@@ -150,6 +150,7 @@ public class BluetoothPrinter extends BasePrinter implements IPrinter {
 
     @Override
     public void printImage(Bitmap bitmap) {
+        mPrinter.setPrinter(PrinterConstants.Command.ALIGN, PrinterConstants.Command.ALIGN_CENTER);
         mPrinter.printImage(bitmap);
     }
 
@@ -217,12 +218,12 @@ public class BluetoothPrinter extends BasePrinter implements IPrinter {
             }
 
             case TextSize.TEXT_SIZE_UP_3: {
-                mPrinter.setCharacterMultiple(1, 0);
+                mPrinter.setCharacterMultiple(1, 1);
                 break;
             }
 
             case TextSize.TEXT_SIZE_UP_4: {
-                mPrinter.setCharacterMultiple(2, 0);
+                mPrinter.setCharacterMultiple(2, 2);
                 break;
             }
 
@@ -235,7 +236,24 @@ public class BluetoothPrinter extends BasePrinter implements IPrinter {
 
     @Override
     protected void getLocalGravity() {
-
+        HelpEntity helpEntity = getHelpEntity();
+        switch (helpEntity.getGrivaty()) {
+            case TextGravity.GRAVITY_CENTER: {
+                mPrinter.setPrinter(PrinterConstants.Command.ALIGN, PrinterConstants.Command.ALIGN_CENTER);
+                break;
+            }
+            case TextGravity.GRAVITY_LEFT: {
+                mPrinter.setPrinter(PrinterConstants.Command.ALIGN, PrinterConstants.Command.ALIGN_LEFT);
+                break;
+            }
+            case TextGravity.GRAVITY_RIGHT: {
+                mPrinter.setPrinter(PrinterConstants.Command.ALIGN, PrinterConstants.Command.ALIGN_RIGHT);
+                break;
+            }
+            default: {
+                mPrinter.setPrinter(PrinterConstants.Command.ALIGN, PrinterConstants.Command.ALIGN_CENTER);
+                break;
+            }
+        }
     }
-
 }

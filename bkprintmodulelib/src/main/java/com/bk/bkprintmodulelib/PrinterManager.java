@@ -17,6 +17,7 @@ import com.bk.bkprintmodulelib.print_help.SharedPrefUtil;
 import com.bk.bkprintmodulelib.support_cp.DataChannel;
 import com.bk.bkprintmodulelib.support_cp.DataChannelFIFOImpl;
 import com.bk.bkprintmodulelib.support_cp.ProductRunnable;
+import com.bk.bkprintmodulelib.utils.StringUtils;
 
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -338,8 +339,8 @@ public class PrinterManager {
      * @param iPrintDatas
      * @param abstractPrintStatus
      */
-    private void doPrint(Context context, IPrinter pekonPrinter, IPrintDataAnalysis iPrintDatas,int printNums, AbstractPrintStatus abstractPrintStatus) {
-        new Thread(getPrintRunnable(pekonPrinter, context, iPrintDatas,printNums, abstractPrintStatus)).run();
+    private void doPrint(Context context, IPrinter pekonPrinter, IPrintDataAnalysis iPrintDatas, int printNums, AbstractPrintStatus abstractPrintStatus) {
+        new Thread(getPrintRunnable(pekonPrinter, context, iPrintDatas, printNums, abstractPrintStatus)).run();
     }
 
 
@@ -381,7 +382,7 @@ public class PrinterManager {
                 try {
                     List<PrintLineContentEntity> printDatas = iPrintDatas.getPrintDatas();
                     for (PrintLineContentEntity printData : printDatas) {
-                        analysisContent(context, pekonPrinter, printData,printNums);
+                        analysisContent(context, pekonPrinter, printData, printNums);
                     }
                     abstractPrintStatus.onPrinterFinished();
                 } catch (Exception e) {
@@ -394,7 +395,8 @@ public class PrinterManager {
 
     /**
      * 解析-分发打印行内容
-     *  @param context
+     *
+     * @param context
      * @param pekonPrinter           打印机
      * @param printLineContentEntity 打印行对象
      * @param printNums
@@ -404,8 +406,10 @@ public class PrinterManager {
         //这里的case 记得排序，常用的在前面，不常用的在后面。能稍微提升速度
         switch (printLineContentEntity.getCommand()) {
             case CommandType.CMMAND_TEXT: {
-                pekonPrinter.setPrintHelpData(printLineContentEntity.getHelpEntity());
-                pekonPrinter.printText(printLineContentEntity.getContent());
+                if (!StringUtils.isEmpty(printLineContentEntity.getContent())) {
+                    pekonPrinter.setPrintHelpData(printLineContentEntity.getHelpEntity());
+                    pekonPrinter.printText(printLineContentEntity.getContent());
+                }
                 break;
             }
             case CommandType.CMMAND_BLANKLINE: {
@@ -423,20 +427,26 @@ public class PrinterManager {
             }
 
             case CommandType.CMMAND_QRCODE: {
-                pekonPrinter.setPrintHelpData(printLineContentEntity.getHelpEntity());
-                pekonPrinter.printQRCode(printLineContentEntity.getContent());
+                if (!StringUtils.isEmpty(printLineContentEntity.getContent())) {
+                    pekonPrinter.setPrintHelpData(printLineContentEntity.getHelpEntity());
+                    pekonPrinter.printQRCode(printLineContentEntity.getContent());
+                }
                 break;
             }
 
             case CommandType.CMMAND_BARCODE: {
-                pekonPrinter.setPrintHelpData(printLineContentEntity.getHelpEntity());
-                pekonPrinter.printBarCode(printLineContentEntity.getContent());
+                if (!StringUtils.isEmpty(printLineContentEntity.getContent())) {
+                    pekonPrinter.setPrintHelpData(printLineContentEntity.getHelpEntity());
+                    pekonPrinter.printBarCode(printLineContentEntity.getContent());
+                }
                 break;
             }
 
             case CommandType.CMMAND_IMAGE: {
-                pekonPrinter.setPrintHelpData(printLineContentEntity.getHelpEntity());
-                pekonPrinter.printImage(printLineContentEntity.getBitmap());
+                if (printLineContentEntity.getBitmap() != null) {
+                    pekonPrinter.setPrintHelpData(printLineContentEntity.getHelpEntity());
+                    pekonPrinter.printImage(printLineContentEntity.getBitmap());
+                }
                 break;
             }
 
