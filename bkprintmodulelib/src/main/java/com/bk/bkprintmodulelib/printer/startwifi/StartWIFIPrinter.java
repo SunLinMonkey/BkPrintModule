@@ -6,13 +6,15 @@ import android.widget.Toast;
 
 
 import com.bk.bkprintmodulelib.cosntants.EncodingFormat;
+import com.bk.bkprintmodulelib.cosntants.StatusConstans;
 import com.bk.bkprintmodulelib.cosntants.TextGravity;
 import com.bk.bkprintmodulelib.cosntants.TextSize;
-import com.bk.bkprintmodulelib.factory.HelpEntityFactory;
 import com.bk.bkprintmodulelib.print_help.AbstractPrintStatus;
 import com.bk.bkprintmodulelib.print_help.AsyncGetPrinterTask;
+import com.bk.bkprintmodulelib.print_help.DialogHelper;
 import com.bk.bkprintmodulelib.print_help.HelpEntity;
 import com.bk.bkprintmodulelib.print_help.IPrinter;
+import com.bk.bkprintmodulelib.print_help.PortinfoDialog;
 import com.bk.bkprintmodulelib.printer.BasePrinter;
 import com.starmicronics.stario.PortInfo;
 import com.starmicronics.starioextension.ICommandBuilder;
@@ -31,7 +33,7 @@ public class StartWIFIPrinter extends BasePrinter implements IPrinter {
     public void initPrintDriver(Context context, AbstractPrintStatus listener) {
         StarIoExt.Emulation emulation = ModelCapability.getEmulation(settings.getModelIndex());
         builder = StarIoExt.createCommandBuilder(emulation);
-        listener.onPrinterInitSucceed();
+        listener.onPrinterInitSucceed(StatusConstans.Code.SUCCESS, "");
         builder.beginDocument();
     }
 
@@ -45,14 +47,16 @@ public class StartWIFIPrinter extends BasePrinter implements IPrinter {
             //todo 提示
             return;
         }
-        listener.onConnectSucceed();
+        listener.onConnectSucceed(StatusConstans.Code.SUCCESS, "");
     }
 
     @Override
-    public void resetPrintConnection(final Context context, AbstractPrintStatus listener) {
+    public void resetPrintConnection(final Context context, final AbstractPrintStatus listener) {
+        DialogHelper.showProgressDialog(context, "正在搜索打印设备，请稍等...");
         new AsyncGetPrinterTask(context, new AsyncGetPrinterTask.OnResutCallback() {
             @Override
             public void Success(List<PortInfo> portInfos) {
+                DialogHelper.hideProgressDialog();
                 if (portInfos == null) {
                     return;
                 }
@@ -61,27 +65,21 @@ public class StartWIFIPrinter extends BasePrinter implements IPrinter {
                     String macAddress = portInfo.getMacAddress();
                     String modelName = portInfo.getModelName();
                     String portName = portInfo.getPortName();
-//                    tvSelectPrint.setText(modelName + "\n" + macAddress);
-                    registerPrinter(context, portName, macAddress, modelName);
+                    registerPrinter(context, portName, macAddress, modelName, listener);
                 } else {
-//                    if (portinfoDialog != null){
-//                        portinfoDialog.dismiss();
-//                        portinfoDialog = null;
-//                    }
-//                    portinfoDialog = new PortinfoDialog(PrintTestActivity.this, portInfos, new PortinfoDialog.OnResultBack() {
-//                        @Override
-//                        public void onSuccess(PortInfo portInfo) {
-//                            tvSelectPrint.setText(portInfo.getModelName() + "\n" + portInfo.getMacAddress());
-//                            registerPrinter(portInfo.getPortName(),portInfo.getMacAddress(),portInfo.getModelName());
-//                        }
-//                    });
-//                    portinfoDialog.show();
-
+                    PortinfoDialog portinfoDialog = new PortinfoDialog(context, portInfos, new PortinfoDialog.OnResultBack() {
+                        @Override
+                        public void onSuccess(PortInfo portInfo) {
+                            registerPrinter(context, portInfo.getPortName(), portInfo.getMacAddress(), portInfo.getModelName(), listener);
+                        }
+                    });
+                    portinfoDialog.show();
                 }
             }
 
             @Override
             public void Failed(String msg) {
+                DialogHelper.hideProgressDialog();
                 Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
             }
         }).execute();
@@ -90,7 +88,7 @@ public class StartWIFIPrinter extends BasePrinter implements IPrinter {
     /**
      * Register printer information to SharedPreference.
      */
-    private void registerPrinter(Context context, String portName, String macAddress, String modelName) {
+    private void registerPrinter(Context context, String portName, String macAddress, String modelName, AbstractPrintStatus listener) {
         PrinterSettingManager settingManager = new PrinterSettingManager(context);
 //        int paperSize =  SharedPrefUtil.getPrintPaperSelection(this); // Constants.PAPER_SELECTION_80
         int paperSize = 1;
@@ -98,6 +96,7 @@ public class StartWIFIPrinter extends BasePrinter implements IPrinter {
                 0,  //modelIndex为3的时候默认是网络打印
                 new PrinterSettings(3, portName, "", macAddress, modelName, true, paperSize)
         );
+        listener.onConnectSucceed(StatusConstans.Code.SUCCESS, modelName + "\n" + macAddress);
     }
 
 
@@ -111,18 +110,19 @@ public class StartWIFIPrinter extends BasePrinter implements IPrinter {
 
     @Override
     public void printBarCode(String content) {
-        builder.appendBarcode(content.getBytes(), ICommandBuilder.BarcodeSymbology.Code39, ICommandBuilder.BarcodeWidth.Mode4, 8, true);
+        builder.appendBarcodeWithAlignment(content.getBytes(), ICommandBuilder.BarcodeSymbology.Code39
+                , ICommandBuilder.BarcodeWidth.Mode8, 120, true, ICommandBuilder.AlignmentPosition.Center);
     }
 
     @Override
     public void printQRCode(String content) {
-        builder.appendQrCode(content.getBytes(), ICommandBuilder.QrCodeModel.No1, ICommandBuilder.QrCodeLevel.M, 8);
+        builder.appendQrCodeWithAlignment(content.getBytes(), ICommandBuilder.QrCodeModel.No2, ICommandBuilder.QrCodeLevel.L, 16, ICommandBuilder.AlignmentPosition.Center);
     }
 
 
     @Override
     public void printImage(Bitmap bitmap) {
-        builder.appendBitmap(bitmap, true);
+        builder.appendBitmapWithAlignment(bitmap, true, ICommandBuilder.AlignmentPosition.Center);
     }
 
     @Override
@@ -231,13 +231,13 @@ public class StartWIFIPrinter extends BasePrinter implements IPrinter {
             case TextSize.TEXT_SIZE_UP_3: {
                 builder.appendEmphasis(true);  //是否强调字体
                 builder.appendMultipleHeight(2);   //设置字体的高度
-                builder.appendCharacterSpace(5);   //设置字体的间距
+                builder.appendCharacterSpace(3);   //设置字体的间距
                 break;
             }
 
             case TextSize.TEXT_SIZE_UP_4: {
                 builder.appendEmphasis(true);  //是否强调字体
-                builder.appendMultipleHeight(2);   //设置字体的高度
+                builder.appendMultipleHeight(3);   //设置字体的高度
                 builder.appendCharacterSpace(5);   //设置字体的间距
                 break;
             }

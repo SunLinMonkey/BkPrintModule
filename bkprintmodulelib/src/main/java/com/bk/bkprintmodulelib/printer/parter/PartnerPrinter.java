@@ -7,6 +7,7 @@ import android.view.Gravity;
 
 
 import com.bk.bkprintmodulelib.cosntants.PrintCmd;
+import com.bk.bkprintmodulelib.cosntants.StatusConstans;
 import com.bk.bkprintmodulelib.cosntants.TextGravity;
 import com.bk.bkprintmodulelib.cosntants.TextSize;
 import com.bk.bkprintmodulelib.factory.HelpEntityFactory;
@@ -32,7 +33,7 @@ public class PartnerPrinter extends BasePrinter implements IPrinter {
     public void initPrintDriver(Context context, AbstractPrintStatus listener) {
         pOutputStream = mSerialPort.getOutputStream();
         printStr = new StringBuffer();
-        listener.onPrinterInitSucceed();
+        listener.onPrinterInitSucceed(StatusConstans.Code.SUCCESS,"");
     }
 
     @Override
@@ -43,7 +44,7 @@ public class PartnerPrinter extends BasePrinter implements IPrinter {
             listener.onConnectFailed("", "");
         } else {
             mSerialPort = getPartnerSerialPort();
-            listener.onConnectSucceed();
+            listener.onConnectSucceed(StatusConstans.Code.SUCCESS,"");
         }
     }
 

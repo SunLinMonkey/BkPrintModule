@@ -7,6 +7,7 @@ import android.support.annotation.RequiresApi;
 
 
 import com.bk.bkprintmodulelib.cosntants.PrintCmd;
+import com.bk.bkprintmodulelib.cosntants.StatusConstans;
 import com.bk.bkprintmodulelib.cosntants.TextGravity;
 import com.bk.bkprintmodulelib.cosntants.TextSize;
 import com.bk.bkprintmodulelib.factory.HelpEntityFactory;
@@ -37,7 +38,7 @@ public class USBPrinter extends BasePrinter implements IPrinter {
         usbPrintUtil.createConn(context, new PrintCallBack() {
             @Override
             public void onSucceed() {
-                listener.onPrinterInitSucceed();
+                listener.onPrinterInitSucceed(StatusConstans.Code.SUCCESS,"");
                 isPrinterReady = true;
             }
 
@@ -55,7 +56,7 @@ public class USBPrinter extends BasePrinter implements IPrinter {
 
     @Override
     public void initPrintConnection(Context context, AbstractPrintStatus listener) {
-        listener.onConnectSucceed();
+        listener.onConnectSucceed(StatusConstans.Code.SUCCESS,"");
         isConnected = true;
     }
 

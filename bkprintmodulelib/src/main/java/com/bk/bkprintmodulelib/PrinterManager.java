@@ -7,6 +7,7 @@ import android.util.SparseArray;
 
 import com.bk.bkprintmodulelib.anotation.AnotationPrinterType;
 import com.bk.bkprintmodulelib.cosntants.CommandType;
+import com.bk.bkprintmodulelib.cosntants.StatusConstans;
 import com.bk.bkprintmodulelib.factory.AbsDriversFactory;
 import com.bk.bkprintmodulelib.factory.DriversFactory;
 import com.bk.bkprintmodulelib.print_help.AbstractPrintStatus;
@@ -96,6 +97,26 @@ public class PrinterManager {
         return pekonPrinters.valueAt(0);
     }
 
+    /**
+     * 获取主打印机的类型
+     *
+     * @return
+     */
+    public int getMainPrinterType() {
+        return pekonPrinters.keyAt(0);
+    }
+
+    /**
+     * 获取辅助打印机的类型
+     *
+     * @return
+     */
+    public int getHelpPrinterType() {
+        if (pekonPrinters.size() > 1) {
+            return pekonPrinters.keyAt(1);
+        }
+        return -1;
+    }
 
     /**
      * 开启生产消费模式
@@ -252,25 +273,25 @@ public class PrinterManager {
     private void doDriversConnection(final Context context, final IPrintDataAnalysis iPrintDatas, final int printNums, final AbstractPrintStatus abstractPrintStatus, final IPrinter pekonPrinter) {
         pekonPrinter.initPrintConnection(context, new AbstractPrintStatus() {
             @Override
-            public void onPrinterFinished() {
-
-            }
-
-            @Override
             public void onPrintFailed(String errorCode, String errorMessage) {
 
             }
 
             @Override
-            public void onConnectSucceed() {
+            public void onConnectSucceed(String code, String message) {
                 Log.e("9527", "2222onConnectSucceed: ");
-                super.onConnectSucceed();
+                super.onConnectSucceed(code, message);
                 doInitPrinter(context, iPrintDatas, printNums, abstractPrintStatus, pekonPrinter);
             }
 
             @Override
             public void onConnectFailed(String errorCode, String errorMessage) {
                 super.onConnectFailed(errorCode, errorMessage);
+            }
+
+            @Override
+            public void onPrinterFinished(String finshCode, String msg) {
+
             }
         });
     }
@@ -286,10 +307,7 @@ public class PrinterManager {
      */
     private void doInitPrinter(final Context context, final IPrintDataAnalysis iPrintDatas, final int printNums, final AbstractPrintStatus abstractPrintStatus, final IPrinter pekonPrinter) {
         initPrinter(pekonPrinter, context, new AbstractPrintStatus() {
-            @Override
-            public void onPrinterFinished() {
 
-            }
 
             @Override
             public void onPrintFailed(String errorCode, String errorMessage) {
@@ -302,8 +320,13 @@ public class PrinterManager {
             }
 
             @Override
-            public void onPrinterInitSucceed() {
-                super.onPrinterInitSucceed();
+            public void onPrinterFinished(String finshCode, String msg) {
+
+            }
+
+            @Override
+            public void onPrinterInitSucceed(String code, String message) {
+                super.onPrinterInitSucceed(code, message);
                 printContentAfterPrinterInit(context, pekonPrinter, iPrintDatas, printNums, abstractPrintStatus);
             }
         });
@@ -364,7 +387,7 @@ public class PrinterManager {
                         for (PrintLineContentEntity printData : printDatas) {
                             analysisContent(context, pekonPrinter, printData, DEAFAULT_PRINT_NUM);
                         }
-                        abstractPrintStatus.onPrinterFinished();
+                        abstractPrintStatus.onPrinterFinished(StatusConstans.Code.SUCCESS, "");
                     }
 
                 } catch (Exception e) {
@@ -384,7 +407,7 @@ public class PrinterManager {
                     for (PrintLineContentEntity printData : printDatas) {
                         analysisContent(context, pekonPrinter, printData, printNums);
                     }
-                    abstractPrintStatus.onPrinterFinished();
+                    abstractPrintStatus.onPrinterFinished(StatusConstans.Code.SUCCESS, "打印完成");
                 } catch (Exception e) {
                     abstractPrintStatus.onPrintFailed("", "");
                 }

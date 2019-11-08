@@ -21,7 +21,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        SharedPrefUtil.getInstance().setMainPrinter(PekonPrinterType.PRINTER_USB_PARALLEL,this);
+        SharedPrefUtil.getInstance().setMainPrinter(PekonPrinterType.PRINTER_START_WIFI,this);
         PrinterManager.getInstance().init(this);
 
 //        PrinterManager.getInstance().prepareLoop(this, new AbstractPrintStatus() {
@@ -62,7 +62,7 @@ public class MainActivity extends Activity {
     private void print() {
         PrinterManager.getInstance().printContent( this, new TestPrintDataAnalysis(this,"测试打印"), new AbstractPrintStatus() {
             @Override
-            public void onPrinterFinished() {
+            public void onPrinterFinished(String errorCode, String errorMessage) {
                 showToast("打印完成");
                 Log.e(TAG, "onPrinterFinished: 打印完成");
             }
@@ -74,7 +74,7 @@ public class MainActivity extends Activity {
             }
 
             @Override
-            public void onConnectSucceed() {
+            public void onConnectSucceed(String errorCode, String errorMessage) {
                 showToast(" 服务连接成功");
                 Log.e(TAG, "onPrinterFinished: 服务连接成功");
             }
@@ -92,7 +92,7 @@ public class MainActivity extends Activity {
             }
 
             @Override
-            public void onPrinterInitSucceed() {
+            public void onPrinterInitSucceed(String errorCode, String errorMessage) {
                 showToast("打印机初始化成功");
                 Log.e(TAG, "onPrinterFinished: 打印机初始化成功");
             }
@@ -107,9 +107,8 @@ public class MainActivity extends Activity {
     public void resetPrinter(View view) {
 
         PrinterManager.getInstance().getPrint().resetPrintConnection(this, new AbstractPrintStatus() {
-
             @Override
-            public void onPrinterFinished() {
+            public void onPrinterFinished(String errorCode, String errorMessage) {
                 showToast("打印完成");
                 Log.e(TAG, "onPrinterFinished: 打印完成");
             }
@@ -121,8 +120,8 @@ public class MainActivity extends Activity {
             }
 
             @Override
-            public void onConnectSucceed() {
-                super.onConnectSucceed();
+            public void onConnectSucceed(String errorCode, String errorMessage) {
+                super.onConnectSucceed(errorCode,errorMessage);
                 showToast("连接成功");
                 Log.e(TAG, "onPrinterFinished: 连接成功");
             }
@@ -142,8 +141,8 @@ public class MainActivity extends Activity {
             }
 
             @Override
-            public void onPrinterInitSucceed() {
-                super.onPrinterInitSucceed();
+            public void onPrinterInitSucceed(String errorCode, String errorMessage) {
+                super.onPrinterInitSucceed(errorCode,errorMessage);
                 showToast("初始化成功");
                 Log.e(TAG, "onPrinterFinished: 初始化成功");
             }

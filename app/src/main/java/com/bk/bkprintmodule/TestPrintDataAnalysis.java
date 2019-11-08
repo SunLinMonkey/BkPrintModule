@@ -48,7 +48,7 @@ public class TestPrintDataAnalysis implements IPrintDataAnalysis {
         printDatas.add(PrintContentFactory.createBlankLine(2));
         printDatas.add(PrintContentFactory.createQRCode("23555222232323"));
         printDatas.add(PrintContentFactory.createBlankLine());
-        Drawable drawable = context.getResources().getDrawable(R.drawable.ic_launchers);
+        Drawable drawable = context.getResources().getDrawable(R.mipmap.ic_launcher);
         printDatas.add(PrintContentFactory.createImage(drawable2Bitmap(drawable)));
         printDatas.add(PrintContentFactory.createText(testContent));
         printDatas.add(PrintContentFactory.createBlankLine(2));

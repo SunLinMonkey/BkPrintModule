@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.util.Log;
 
 import com.bk.bkprintmodulelib.cosntants.PrintCmd;
+import com.bk.bkprintmodulelib.cosntants.StatusConstans;
 import com.bk.bkprintmodulelib.cosntants.TextGravity;
 import com.bk.bkprintmodulelib.cosntants.TextSize;
 import com.bk.bkprintmodulelib.print_help.AbstractPrintStatus;
@@ -32,7 +33,7 @@ public class USBParallelPortPrinter extends BasePrinter implements IPrinter {
     public void initPrintDriver(Context context, AbstractPrintStatus listener) {
         printStr = new StringBuffer();
         pOutputStream = parallelPort.getOutputStream();
-        listener.onPrinterInitSucceed();
+        listener.onPrinterInitSucceed(StatusConstans.Code.SUCCESS,"");
     }
 
     private ParallelProt getParallelPort() {
@@ -55,7 +56,7 @@ public class USBParallelPortPrinter extends BasePrinter implements IPrinter {
             //todo 不存在提醒
         } else {
             parallelPort = getParallelPort();
-            listener.onConnectSucceed();
+            listener.onConnectSucceed(StatusConstans.Code.SUCCESS,"");
         }
     }
 

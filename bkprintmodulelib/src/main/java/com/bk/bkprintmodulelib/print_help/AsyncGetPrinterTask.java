@@ -13,51 +13,49 @@ import java.util.List;
 /**
  * 获取所有的在同一个网段的wifi打印机
  */
-public class AsyncGetPrinterTask extends AsyncTask<Void,Void, List<PortInfo>> {
+public class AsyncGetPrinterTask extends AsyncTask<Void, Void, List<PortInfo>> {
 
-	private List<PortInfo> mPortList;   //获取所有的满足条件的打印机
-	private Context mContext;
-	private OnResutCallback mOnResutCallback;
+    private List<PortInfo> mPortList;   //获取所有的满足条件的打印机
+    private Context mContext;
+    private OnResutCallback mOnResutCallback;
 
-	public AsyncGetPrinterTask(Context mContext, OnResutCallback onResutCallback) {
-		this.mContext = mContext;
+    public AsyncGetPrinterTask(Context mContext, OnResutCallback onResutCallback) {
+        this.mContext = mContext;
 //		DialogHelper.showProgressDialog(mContext,mContext.getResources().getString(R.string.loading));
 //		logHelper = new LogHelper(mContext);
-		Toast.makeText(mContext,"查询。。",Toast.LENGTH_LONG).show();
-		mOnResutCallback = onResutCallback;
-	}
+        mOnResutCallback = onResutCallback;
+    }
 
-	@Override
-	protected List<PortInfo> doInBackground(Void... voids) {
-		try {
-			mPortList = StarIOPort.searchPrinter("TCP:", mContext);
-		} catch (StarIOPortException e) {
-			e.printStackTrace();
+    @Override
+    protected List<PortInfo> doInBackground(Void... voids) {
+        try {
+            mPortList = StarIOPort.searchPrinter("TCP:", mContext);
+        } catch (StarIOPortException e) {
+            e.printStackTrace();
 //			logHelper.error(CommonApplication.getInstance().getString(R.string.get_printer_exception) + e.toString());
-		}
-		if (mPortList == null || mPortList.size() == 0) {
+        }
+        if (mPortList == null || mPortList.size() == 0) {
 //			logHelper.error(CommonApplication.getInstance().getString(R.string.no_wifi_printer));
-		}
-		return mPortList;
-	}
+        }
+        return mPortList;
+    }
 
-	@Override
-	protected void onPostExecute(List<PortInfo> portInfos) {
-		super.onPostExecute(portInfos);
+    @Override
+    protected void onPostExecute(List<PortInfo> portInfos) {
+        super.onPostExecute(portInfos);
 //		DialogHelper.hideProgressDialog();
-		if (portInfos == null || portInfos.size() == 0) {
+        if (portInfos == null || portInfos.size() == 0) {
 //			ToastHelper.show(CommonApplication.getInstance().getString(R.string.no_printer));
-			mOnResutCallback.Failed("未检查到打印机");
-			return;
-		}
-		mOnResutCallback.Success(portInfos);
-		Toast.makeText(mContext,"查询结束。。",Toast.LENGTH_LONG).show();
-	}
+            mOnResutCallback.Failed("未检查到打印机");
+            return;
+        }
+        mOnResutCallback.Success(portInfos);
+    }
 
 
-	public interface OnResutCallback{
-		void Success(List<PortInfo> portInfos);
+    public interface OnResutCallback {
+        void Success(List<PortInfo> portInfos);
 
-		void Failed(String msg);
-	}
+        void Failed(String msg);
+    }
 }

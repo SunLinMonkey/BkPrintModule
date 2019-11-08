@@ -8,6 +8,7 @@ import com.android.print.sdk.Barcode;
 import com.android.print.sdk.PrinterConstants;
 import com.android.print.sdk.PrinterInstance;
 import com.bk.bkprintmodulelib.cosntants.PrintCmd;
+import com.bk.bkprintmodulelib.cosntants.StatusConstans;
 import com.bk.bkprintmodulelib.cosntants.TextGravity;
 import com.bk.bkprintmodulelib.cosntants.TextSize;
 import com.bk.bkprintmodulelib.print_help.AbstractPrintStatus;
@@ -60,7 +61,7 @@ public class BluetoothPrinter extends BasePrinter implements IPrinter {
 
         private void initFailed() {
             if (listenerWeakReference != null && listenerWeakReference.get() != null) {
-                listenerWeakReference.get().onConnectFailed("", "蓝牙初始化失败");
+                listenerWeakReference.get().onConnectFailed(StatusConstans.Code.FILED, "蓝牙初始化失败");
             }
             isConnected = false;
         }
@@ -68,7 +69,7 @@ public class BluetoothPrinter extends BasePrinter implements IPrinter {
         private void initSucceed() {
             isConnected = true;
             if (listenerWeakReference != null && listenerWeakReference.get() != null) {
-                listenerWeakReference.get().onConnectSucceed();
+                listenerWeakReference.get().onConnectSucceed(StatusConstans.Code.SUCCESS,"");
             }
         }
     }
@@ -78,7 +79,7 @@ public class BluetoothPrinter extends BasePrinter implements IPrinter {
     public void initPrintDriver(Context context, AbstractPrintStatus listener) {
         if (mPrinter != null) {
             mPrinter.init();
-            listener.onPrinterInitSucceed();
+            listener.onPrinterInitSucceed(StatusConstans.Code.SUCCESS,"");
         }
     }
 
@@ -95,7 +96,7 @@ public class BluetoothPrinter extends BasePrinter implements IPrinter {
                 myOpertion = new BluetoothOperation(context, mHandler);
                 myOpertion.btAutoConn(context, mHandler);
             } else {
-                listener.onConnectSucceed();
+                listener.onConnectSucceed(StatusConstans.Code.SUCCESS,"");
             }
         }
     }

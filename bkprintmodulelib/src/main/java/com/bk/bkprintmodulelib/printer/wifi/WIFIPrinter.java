@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 
 import com.bk.bkprintmodulelib.cosntants.PrintCmd;
+import com.bk.bkprintmodulelib.cosntants.StatusConstans;
 import com.bk.bkprintmodulelib.cosntants.TextGravity;
 import com.bk.bkprintmodulelib.print_help.AbstractPrintStatus;
 import com.bk.bkprintmodulelib.print_help.HelpEntity;
@@ -34,7 +35,7 @@ public class WIFIPrinter extends BasePrinter implements IPrinter {
     public void initPrintDriver(Context context, AbstractPrintStatus listener) {
         printString = new StringBuffer();
         printString.append(PrintCmd.initialPrint());
-        listener.onPrinterInitSucceed();
+        listener.onPrinterInitSucceed(StatusConstans.Code.SUCCESS,"");
     }
 
     @Override
@@ -45,7 +46,7 @@ public class WIFIPrinter extends BasePrinter implements IPrinter {
             listener.onConnectFailed("", "请连接打印机");
             return;
         }
-        listener.onConnectSucceed();
+        listener.onConnectSucceed(StatusConstans.Code.SUCCESS,"");
     }
 
     @Override
