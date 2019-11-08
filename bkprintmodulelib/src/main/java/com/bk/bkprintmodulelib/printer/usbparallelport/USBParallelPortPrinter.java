@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.util.Log;
 
 import com.bk.bkprintmodulelib.cosntants.PrintCmd;
+import com.bk.bkprintmodulelib.cosntants.TextGravity;
 import com.bk.bkprintmodulelib.cosntants.TextSize;
 import com.bk.bkprintmodulelib.print_help.AbstractPrintStatus;
 import com.bk.bkprintmodulelib.print_help.HelpEntity;
@@ -47,7 +48,6 @@ public class USBParallelPortPrinter extends BasePrinter implements IPrinter {
 
     @Override
     public void initPrintConnection(Context context, AbstractPrintStatus listener) {
-//        File usbFile = new File("/dev/ttyUSB0");
         File usbFile = new File(PARALLEL_PROT_FILE_PATH);
         if (!usbFile.exists()) {
 //            showShortToast(getString(R.string.usb_control_sole_not_exsit));
@@ -74,20 +74,22 @@ public class USBParallelPortPrinter extends BasePrinter implements IPrinter {
 
     @Override
     public void printBarCode(String content) {
-
+        getLocalGravity(TextGravity.GRAVITY_CENTER);
+        getLocalTextSize(TextSize.TEXT_SIZE_UP_3);
+        printStr.append(new String(PrintCmd.printBarcode(content)));
+        printBlankLine();
+        printBlankLine();
     }
 
 
     @Override
     public void printQRCode(String content) {
-        //并口不能打二维码
-//        printQRCode(content, TextSize.TEXT_SIZE_DEFAULT);
+
     }
 
 
     @Override
     public void printImage(Bitmap bitmap) {
-
     }
 
     @Override
@@ -114,6 +116,7 @@ public class USBParallelPortPrinter extends BasePrinter implements IPrinter {
 
     @Override
     public void cutPaper() {
+        printBlankLine();
         printStr.append(PrintCmd.cut());
     }
 
@@ -132,7 +135,7 @@ public class USBParallelPortPrinter extends BasePrinter implements IPrinter {
 
     @Override
     public void openCashBox() {
-//        printStr.append("-n -e '\\x1b\\x70\\x00\\x3c\\xff'");// 开钱箱
+        printStr.append("-n -e '\\x1b\\x70\\x00\\x3c\\xff'");// 开钱箱
     }
 
     @Override
@@ -155,6 +158,7 @@ public class USBParallelPortPrinter extends BasePrinter implements IPrinter {
             e.printStackTrace();
         }
     }
+
 
     private void destroyParallel() {
         try {
@@ -186,7 +190,7 @@ public class USBParallelPortPrinter extends BasePrinter implements IPrinter {
             }
 
             case TextSize.TEXT_SIZE_UP_3: {
-                printStr.append(PrintCmd.size(1, 0));
+                printStr.append(PrintCmd.size(2, 2));
                 break;
             }
 
@@ -209,6 +213,24 @@ public class USBParallelPortPrinter extends BasePrinter implements IPrinter {
      */
     private void getLocalGravity(int gravity) {
 
+        switch (gravity) {
+            case TextGravity.GRAVITY_CENTER: {
+                printStr.append(PrintCmd.alignCenter());
+                break;
+            }
+            case TextGravity.GRAVITY_LEFT: {
+                printStr.append(PrintCmd.alignLeft());
+                break;
+            }
+            case TextGravity.GRAVITY_RIGHT: {
+                printStr.append(PrintCmd.alignRight());
+                break;
+            }
+            default: {
+                printStr.append(PrintCmd.alignCenter());
+                break;
+            }
+        }
     }
 
     @Override

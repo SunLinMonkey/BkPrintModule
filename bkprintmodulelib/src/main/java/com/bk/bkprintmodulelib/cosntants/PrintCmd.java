@@ -430,6 +430,7 @@ public class PrintCmd {
     }
 
 
+
     /**
      * 拍档打印二维码指令、方法
      * @param
@@ -463,6 +464,22 @@ public class PrintCmd {
         }
         return "";
     }
+
+    public static byte[] printBarcode(String stBarcode) {
+        int iLength = stBarcode.length() + 4;
+        byte[] returnText = new byte[iLength];
+
+        returnText[0] = 0x1D;
+        returnText[1] = 'k';
+        returnText[2] = 0x45;
+        returnText[3] = (byte) stBarcode.length(); // 条码长度；
+
+        System.arraycopy(stBarcode.getBytes(), 0, returnText, 4,
+                stBarcode.getBytes().length);
+
+        return returnText;
+    }
+
 
     interface Gravity{
         String LEFT = "left";//居左

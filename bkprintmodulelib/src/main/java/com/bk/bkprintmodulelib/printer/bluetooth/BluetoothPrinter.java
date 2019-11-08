@@ -189,7 +189,7 @@ public class BluetoothPrinter extends BasePrinter implements IPrinter {
 
     @Override
     public void openCashBox() {
-        PrintCmd.openBluetoothBox();
+//        PrintCmd.openBluetoothBox();
         mPrinter.openCashbox(true, true);
     }
 

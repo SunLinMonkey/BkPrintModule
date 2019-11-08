@@ -55,6 +55,7 @@ public class USBSerialport extends BasePrinter implements IPrinter {
     @Override
     public void printText(String content) {
         try {
+            getLocalGravity();
             getLocalTextSize();
             pOutputStream.write(content.getBytes(EncodingFormat.FORMAT_GBK));
         } catch (IOException e) {
@@ -108,7 +109,7 @@ public class USBSerialport extends BasePrinter implements IPrinter {
     @Override
     public void cutPaper() {
         try {
-            pOutputStream.write(PrintCmd.CutByte());
+            pOutputStream.write(PrintCmd.cutByteArray());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -127,7 +128,11 @@ public class USBSerialport extends BasePrinter implements IPrinter {
 
     @Override
     public void openCashBox() {
-//        pOutputStream.write();
+        try {
+            pOutputStream.write(PrintCmd.openPartnerBoxByte());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -214,7 +219,28 @@ public class USBSerialport extends BasePrinter implements IPrinter {
      * @param gravity
      */
     private void getLocalGravity(int gravity) {
-
+        try {
+            switch (gravity) {
+                case TextGravity.GRAVITY_CENTER: {
+                    pOutputStream.write(PrintCmd.alignCenter().getBytes());
+                    break;
+                }
+                case TextGravity.GRAVITY_LEFT: {
+                    pOutputStream.write(PrintCmd.alignCenter().getBytes());
+                    break;
+                }
+                case TextGravity.GRAVITY_RIGHT: {
+                    pOutputStream.write(PrintCmd.alignCenter().getBytes());
+                    break;
+                }
+                default: {
+                    pOutputStream.write(PrintCmd.alignCenter().getBytes());
+                    break;
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -224,6 +250,6 @@ public class USBSerialport extends BasePrinter implements IPrinter {
 
     @Override
     protected void getLocalGravity() {
-
+        getLocalGravity(getHelpEntity().getGrivaty());
     }
 }

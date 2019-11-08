@@ -111,18 +111,18 @@ public class StartWIFIPrinter extends BasePrinter implements IPrinter {
 
     @Override
     public void printBarCode(String content) {
-
+        builder.appendBarcode(content.getBytes(), ICommandBuilder.BarcodeSymbology.Code39, ICommandBuilder.BarcodeWidth.Mode4, 8, true);
     }
 
     @Override
     public void printQRCode(String content) {
-
+        builder.appendQrCode(content.getBytes(), ICommandBuilder.QrCodeModel.No1, ICommandBuilder.QrCodeLevel.M, 8);
     }
 
 
     @Override
     public void printImage(Bitmap bitmap) {
-
+        builder.appendBitmap(bitmap, true);
     }
 
     @Override
@@ -196,6 +196,11 @@ public class StartWIFIPrinter extends BasePrinter implements IPrinter {
                 builder.appendAlignment(ICommandBuilder.AlignmentPosition.Center);
                 break;
             }
+            default: {
+                builder.appendAlignment(ICommandBuilder.AlignmentPosition.Center);
+                break;
+            }
+
         }
     }
 
