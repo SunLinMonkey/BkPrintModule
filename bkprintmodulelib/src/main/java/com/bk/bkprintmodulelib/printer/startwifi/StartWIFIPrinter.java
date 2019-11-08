@@ -224,21 +224,21 @@ public class StartWIFIPrinter extends BasePrinter implements IPrinter {
             case TextSize.TEXT_SIZE_DEFAULT: {
                 builder.appendEmphasis(false);  //是否强调字体
                 builder.appendMultipleHeight(1);   //设置字体的高度
-                builder.appendCharacterSpace(1);   //设置字体的间距
+                builder.appendCharacterSpace(0);   //设置字体的间距
                 break;
             }
 
             case TextSize.TEXT_SIZE_UP_3: {
                 builder.appendEmphasis(true);  //是否强调字体
                 builder.appendMultipleHeight(2);   //设置字体的高度
-                builder.appendCharacterSpace(3);   //设置字体的间距
+                builder.appendCharacterSpace(2);   //设置字体的间距
                 break;
             }
 
             case TextSize.TEXT_SIZE_UP_4: {
                 builder.appendEmphasis(true);  //是否强调字体
                 builder.appendMultipleHeight(3);   //设置字体的高度
-                builder.appendCharacterSpace(5);   //设置字体的间距
+                builder.appendCharacterSpace(4);   //设置字体的间距
                 break;
             }
 
