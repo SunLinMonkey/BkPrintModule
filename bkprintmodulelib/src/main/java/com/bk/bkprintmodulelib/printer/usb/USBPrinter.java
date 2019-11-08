@@ -7,6 +7,7 @@ import android.support.annotation.RequiresApi;
 
 
 import com.bk.bkprintmodulelib.cosntants.PrintCmd;
+import com.bk.bkprintmodulelib.cosntants.TextGravity;
 import com.bk.bkprintmodulelib.cosntants.TextSize;
 import com.bk.bkprintmodulelib.factory.HelpEntityFactory;
 import com.bk.bkprintmodulelib.print_help.AbstractPrintStatus;
@@ -66,6 +67,7 @@ public class USBPrinter extends BasePrinter implements IPrinter {
     @Override
     public void printText(String content) {
         getLocalTextSize();
+        getLocalGravity();
         printMessage.append(content);
     }
 
@@ -111,26 +113,29 @@ public class USBPrinter extends BasePrinter implements IPrinter {
 
     @Override
     public void printBlankLine() {
-        printMessage.append("\n\n\n");
+        printMessage.append("\n");
     }
 
     @Override
     public void cutPaper() {
-
+        printBlankLine(3);
+        printMessage.append(PrintCmd.CutString());
     }
 
     @Override
     public void startPrint(Context context) {
         if (printMessage == null) {
             listener.onPrintFailed("", "");
+            printMessage.delete(0, printMessage.length() - 1);
             return;
         }
         usbPrintUtil.printMessage(context, printMessage.toString());
+        printMessage.delete(0, printMessage.length() - 1);
     }
 
     @Override
     public void openCashBox() {
-
+//        printMessage.append(PrintCmd.CutString());
     }
 
     @Override
@@ -183,6 +188,38 @@ public class USBPrinter extends BasePrinter implements IPrinter {
 
     @Override
     protected void getLocalGravity() {
+        getLocalGravity(getHelpEntity().getGrivaty());
+    }
 
+
+    /**
+     * 位置
+     *
+     * @param gravity
+     * @return
+     */
+    private void getLocalGravity(int gravity) {
+        switch (gravity) {
+
+            case TextGravity.GRAVITY_LEFT: {
+                printMessage.append(PrintCmd.alignLeft());
+                break;
+            }
+
+            case TextGravity.GRAVITY_CENTER: {
+                printMessage.append(PrintCmd.alignCenter());
+                break;
+            }
+
+            case TextGravity.GRAVITY_RIGHT: {
+                printMessage.append(PrintCmd.alignRight());
+                break;
+            }
+
+            default: {
+                printMessage.append(PrintCmd.alignCenter());
+                break;
+            }
+        }
     }
 }

@@ -56,6 +56,7 @@ public class TestPrintDataAnalysis implements IPrintDataAnalysis {
         printDatas.add(PrintContentFactory.createBlankLine(2));
         printDatas.add(PrintContentFactory.createOpenCashBox());
         printDatas.add(PrintContentFactory.createCutPage());
+        printDatas.add(PrintContentFactory.createStartCommand());
     }
 
 

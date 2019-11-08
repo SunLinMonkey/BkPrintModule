@@ -7,6 +7,7 @@ import android.os.Message;
 import com.android.print.sdk.Barcode;
 import com.android.print.sdk.PrinterConstants;
 import com.android.print.sdk.PrinterInstance;
+import com.bk.bkprintmodulelib.cosntants.PrintCmd;
 import com.bk.bkprintmodulelib.cosntants.TextGravity;
 import com.bk.bkprintmodulelib.cosntants.TextSize;
 import com.bk.bkprintmodulelib.print_help.AbstractPrintStatus;
@@ -188,6 +189,7 @@ public class BluetoothPrinter extends BasePrinter implements IPrinter {
 
     @Override
     public void openCashBox() {
+        PrintCmd.openBluetoothBox();
         mPrinter.openCashbox(true, true);
     }
 
