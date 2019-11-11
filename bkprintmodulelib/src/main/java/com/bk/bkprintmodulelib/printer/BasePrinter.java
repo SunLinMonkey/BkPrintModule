@@ -26,13 +26,14 @@ public abstract class BasePrinter {
 
     /**
      * USB并口用的
+     *
      * @return
      */
     protected boolean isTextSizeChanged() {
-        if (lastHelpEntity.getTestSize() == helpEntity.getTestSize()) {
-            return false;
+        if (lastHelpEntity == null) {
+            return true;
         }
-        return true;
+        return lastHelpEntity.getTestSize() != helpEntity.getTestSize();
     }
 
     protected HelpEntity getHelpEntity() {
