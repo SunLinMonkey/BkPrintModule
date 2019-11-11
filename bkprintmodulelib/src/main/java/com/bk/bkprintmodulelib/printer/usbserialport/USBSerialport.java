@@ -129,8 +129,10 @@ public class USBSerialport extends BasePrinter implements IPrinter {
 
     @Override
     public void openCashBox() {
+
+
         try {
-            pOutputStream.write(PrintCmd.openPartnerBoxByte());
+            pOutputStream.write(PrintCmd.openPartnerBoxByte());// 打开钱箱
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -187,7 +189,7 @@ public class USBSerialport extends BasePrinter implements IPrinter {
 
             case TextSize.TEXT_SIZE_UP_3: {
                 try {
-                    pOutputStream.write(PrintCmd.sizeBytes(1, 1));
+                    pOutputStream.write(PrintCmd.sizeBytes(2, 2));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -196,7 +198,7 @@ public class USBSerialport extends BasePrinter implements IPrinter {
 
             case TextSize.TEXT_SIZE_UP_4: {
                 try {
-                    pOutputStream.write(PrintCmd.sizeBytes(2, 2));
+                    pOutputStream.write(PrintCmd.sizeBytes(3, 3));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -205,7 +207,7 @@ public class USBSerialport extends BasePrinter implements IPrinter {
 
             default: {
                 try {
-                    pOutputStream.write(PrintCmd.sizeBytes(1, 0));
+                    pOutputStream.write(PrintCmd.initByte());
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -227,11 +229,11 @@ public class USBSerialport extends BasePrinter implements IPrinter {
                     break;
                 }
                 case TextGravity.GRAVITY_LEFT: {
-                    pOutputStream.write(PrintCmd.alignCenter().getBytes());
+                    pOutputStream.write(PrintCmd.alignLeft().getBytes());
                     break;
                 }
                 case TextGravity.GRAVITY_RIGHT: {
-                    pOutputStream.write(PrintCmd.alignCenter().getBytes());
+                    pOutputStream.write(PrintCmd.alignRight().getBytes());
                     break;
                 }
                 default: {

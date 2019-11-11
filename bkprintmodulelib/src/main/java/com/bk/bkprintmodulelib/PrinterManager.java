@@ -391,7 +391,7 @@ public class PrinterManager {
                     }
 
                 } catch (Exception e) {
-                    abstractPrintStatus.onPrintFailed("", "");
+                    abstractPrintStatus.onPrintFailed("", e.getMessage());
                 }
             }
         };
@@ -409,7 +409,7 @@ public class PrinterManager {
                     }
                     abstractPrintStatus.onPrinterFinished(StatusConstans.Code.SUCCESS, "打印完成");
                 } catch (Exception e) {
-                    abstractPrintStatus.onPrintFailed("", "");
+                    abstractPrintStatus.onPrintFailed("", e.getMessage());
                 }
             }
         };
@@ -425,12 +425,11 @@ public class PrinterManager {
      * @param printNums
      */
     private void analysisContent(Context context, IPrinter pekonPrinter, PrintLineContentEntity printLineContentEntity, int printNums) {
-
+        pekonPrinter.setPrintHelpData(printLineContentEntity.getHelpEntity());
         //这里的case 记得排序，常用的在前面，不常用的在后面。能稍微提升速度
         switch (printLineContentEntity.getCommand()) {
             case CommandType.CMMAND_TEXT: {
                 if (!StringUtils.isEmpty(printLineContentEntity.getContent())) {
-                    pekonPrinter.setPrintHelpData(printLineContentEntity.getHelpEntity());
                     pekonPrinter.printText(printLineContentEntity.getContent());
                 }
                 break;
@@ -451,7 +450,6 @@ public class PrinterManager {
 
             case CommandType.CMMAND_QRCODE: {
                 if (!StringUtils.isEmpty(printLineContentEntity.getContent())) {
-                    pekonPrinter.setPrintHelpData(printLineContentEntity.getHelpEntity());
                     pekonPrinter.printQRCode(printLineContentEntity.getContent());
                 }
                 break;
@@ -459,7 +457,6 @@ public class PrinterManager {
 
             case CommandType.CMMAND_BARCODE: {
                 if (!StringUtils.isEmpty(printLineContentEntity.getContent())) {
-                    pekonPrinter.setPrintHelpData(printLineContentEntity.getHelpEntity());
                     pekonPrinter.printBarCode(printLineContentEntity.getContent());
                 }
                 break;
@@ -467,7 +464,6 @@ public class PrinterManager {
 
             case CommandType.CMMAND_IMAGE: {
                 if (printLineContentEntity.getBitmap() != null) {
-                    pekonPrinter.setPrintHelpData(printLineContentEntity.getHelpEntity());
                     pekonPrinter.printImage(printLineContentEntity.getBitmap());
                 }
                 break;

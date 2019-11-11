@@ -10,6 +10,8 @@ public abstract class BasePrinter {
      */
     private HelpEntity helpEntity;
 
+    private HelpEntity lastHelpEntity = HelpEntityFactory.getCenterDefault();
+
 
     protected boolean isConnected = false;
 
@@ -17,9 +19,20 @@ public abstract class BasePrinter {
     protected boolean isPrinterReady = false;
 
 
-
     public void setHelpEntity(HelpEntity helpEntity) {
+        lastHelpEntity = this.helpEntity;
         this.helpEntity = helpEntity;
+    }
+
+    /**
+     * USB并口用的
+     * @return
+     */
+    protected boolean isTextSizeChanged() {
+        if (lastHelpEntity.getTestSize() == helpEntity.getTestSize()) {
+            return false;
+        }
+        return true;
     }
 
     protected HelpEntity getHelpEntity() {

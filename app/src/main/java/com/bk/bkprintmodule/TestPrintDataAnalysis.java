@@ -43,6 +43,9 @@ public class TestPrintDataAnalysis implements IPrintDataAnalysis {
         printDatas.add(PrintContentFactory.createText(context.getString(R.string.title_hotline)+1234567, TextSize.TEXT_SIZE_DEFAULT));
         printDatas.add(PrintContentFactory.createBlankLine(2));
         printDatas.add(PrintContentFactory.createText(context.getString(R.string.end_print_test), TextSize.TEXT_SIZE_DOWN_2));
+        printDatas.add(PrintContentFactory.createText("111", TextSize.TEXT_SIZE_DOWN_2));
+        printDatas.add(PrintContentFactory.createText("222", TextSize.TEXT_SIZE_DOWN_2));
+        printDatas.add(PrintContentFactory.createText("333", TextSize.TEXT_SIZE_DOWN_2));
         printDatas.add(PrintContentFactory.createBlankLine());
         printDatas.add(PrintContentFactory.createText(context.getString(R.string.end_print_test)+"22", TextSize.TEXT_SIZE_DEFAULT, TextGravity.GRAVITY_CENTER));
         printDatas.add(PrintContentFactory.createBlankLine(2));

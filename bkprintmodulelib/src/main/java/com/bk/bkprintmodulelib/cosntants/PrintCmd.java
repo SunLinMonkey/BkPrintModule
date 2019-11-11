@@ -431,6 +431,7 @@ public class PrintCmd {
 
 
 
+
     /**
      * 拍档打印二维码指令、方法
      * @param

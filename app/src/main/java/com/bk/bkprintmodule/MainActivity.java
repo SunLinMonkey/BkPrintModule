@@ -21,7 +21,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        SharedPrefUtil.getInstance().setMainPrinter(PekonPrinterType.PRINTER_START_WIFI,this);
+        SharedPrefUtil.getInstance().setMainPrinter(PekonPrinterType.PRINTER_USB_PARALLEL,this);
         PrinterManager.getInstance().init(this);
 
 //        PrinterManager.getInstance().prepareLoop(this, new AbstractPrintStatus() {
@@ -70,7 +70,7 @@ public class MainActivity extends Activity {
             @Override
             public void onPrintFailed(String errorCode, String errorMessage) {
                 showToast("打印失败");
-                Log.e(TAG, "onPrinterFinished: 打印失败");
+                Log.e(TAG, "onPrintFailed: 打印失败:"+errorMessage);
             }
 
             @Override
@@ -116,7 +116,7 @@ public class MainActivity extends Activity {
             @Override
             public void onPrintFailed(String errorCode, String errorMessage) {
                 showToast("打印失败");
-                Log.e(TAG, "onPrinterFinished: 打印失败");
+                Log.e(TAG, "onPrintFailed: 打印失败:"+errorMessage);
             }
 
             @Override

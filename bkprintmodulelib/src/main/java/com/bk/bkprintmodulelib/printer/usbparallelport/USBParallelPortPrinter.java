@@ -127,8 +127,6 @@ public class USBParallelPortPrinter extends BasePrinter implements IPrinter {
             printWrite(printStr.toString());
             Thread.sleep(1000);
             destroyParallel();
-        } catch (IOException e) {
-            e.printStackTrace();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -149,9 +147,10 @@ public class USBParallelPortPrinter extends BasePrinter implements IPrinter {
         return false;
     }
 
-    private void printWrite(String str) throws UnsupportedEncodingException, IOException {
-        String printStr = "echo " + str + " > " + PARALLEL_PROT_FILE_PATH;
+    private void printWrite(String str)  {
+
         try {
+            String printStr = "echo " + str + " > " + PARALLEL_PROT_FILE_PATH;
             pOutputStream.write(printStr.getBytes("GBK"));
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
@@ -171,6 +170,7 @@ public class USBParallelPortPrinter extends BasePrinter implements IPrinter {
             }
 
         } catch (IOException e) {
+            Log.e(TAG, "destroyParallel: "+e.getMessage() );
         }
     }
 
@@ -236,7 +236,9 @@ public class USBParallelPortPrinter extends BasePrinter implements IPrinter {
 
     @Override
     protected void getLocalTextSize() {
-        getLocalTextSize(getHelpEntity().getTestSize());
+        if (isTextSizeChanged()){
+            getLocalTextSize(getHelpEntity().getTestSize());
+        }
     }
 
     @Override
