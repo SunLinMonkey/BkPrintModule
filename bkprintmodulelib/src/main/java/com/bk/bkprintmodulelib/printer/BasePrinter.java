@@ -10,7 +10,7 @@ public abstract class BasePrinter {
      */
     private HelpEntity helpEntity;
 
-    private HelpEntity lastHelpEntity = HelpEntityFactory.getCenterDefault();
+    private HelpEntity lastHelpEntity = HelpEntityFactory.getDefaultHelpEntity();
 
 
     protected boolean isConnected = false;

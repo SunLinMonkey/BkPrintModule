@@ -81,6 +81,8 @@ public class USBPrinter extends BasePrinter implements IPrinter {
     @Override
     public void printQRCode(String content) {
         try {
+            getLocalTextSize();
+            getLocalGravity();
             printMessage.append(PrintCmd.generate2DBarcodePartner(content.getBytes("GBK").length, 8));
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();

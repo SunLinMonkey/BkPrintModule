@@ -3,6 +3,8 @@ package com.bk.bkprintmodulelib.factory;
 import android.graphics.Bitmap;
 
 import com.bk.bkprintmodulelib.cosntants.CommandType;
+import com.bk.bkprintmodulelib.cosntants.TextGravity;
+import com.bk.bkprintmodulelib.cosntants.TextSize;
 import com.bk.bkprintmodulelib.print_help.HelpEntity;
 import com.bk.bkprintmodulelib.print_help.PrintLineContentEntity;
 
@@ -73,6 +75,10 @@ public class PrintContentFactory {
         PrintLineContentEntity printLineContentEntity = new PrintLineContentEntity();
         printLineContentEntity.setCommand(CommandType.CMMAND_QRCODE);
         printLineContentEntity.setContent(content);
+        HelpEntity defaultHelpEntity = HelpEntityFactory.getDefaultHelpEntity();
+        defaultHelpEntity.setTestSize(TextSize.TEXT_SIZE_DEFAULT);
+        defaultHelpEntity.setGrivaty(TextGravity.GRAVITY_CENTER);
+        printLineContentEntity.setHelpEntity(defaultHelpEntity);
         return printLineContentEntity;
     }
 
@@ -83,9 +89,22 @@ public class PrintContentFactory {
         printLineContentEntity.setContent(content);
         HelpEntity defaultHelpEntity = HelpEntityFactory.getDefaultHelpEntity();
         defaultHelpEntity.setTestSize(textSize);
+        defaultHelpEntity.setGrivaty(TextGravity.GRAVITY_CENTER);
         printLineContentEntity.setHelpEntity(defaultHelpEntity);
         return printLineContentEntity;
     }
+
+    public static PrintLineContentEntity createQRCode(String content, int textSize,int grivity) {
+        PrintLineContentEntity printLineContentEntity = new PrintLineContentEntity();
+        printLineContentEntity.setCommand(CommandType.CMMAND_QRCODE);
+        printLineContentEntity.setContent(content);
+        HelpEntity defaultHelpEntity = HelpEntityFactory.getDefaultHelpEntity();
+        defaultHelpEntity.setTestSize(textSize);
+        defaultHelpEntity.setGrivaty(grivity);
+        printLineContentEntity.setHelpEntity(defaultHelpEntity);
+        return printLineContentEntity;
+    }
+
 
 
     public static PrintLineContentEntity createBarCode(String content) {

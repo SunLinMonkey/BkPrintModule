@@ -11,19 +11,12 @@ public class HelpEntityFactory {
         helpEntity.setTestSize(TextSize.TEXT_SIZE_DEFAULT);
         helpEntity.setBold(false);
         helpEntity.setNeedUnderLine(false);
-        helpEntity.setGrivaty(TextGravity.GRAVITY_LEFT);
-        return helpEntity;
-    }
-
-
-    public static HelpEntity getCenterDefault() {
-        HelpEntity helpEntity = new HelpEntity();
-        helpEntity.setTestSize(TextSize.TEXT_SIZE_DEFAULT);
-        helpEntity.setBold(false);
-        helpEntity.setNeedUnderLine(false);
         helpEntity.setGrivaty(TextGravity.GRAVITY_CENTER);
         return helpEntity;
     }
+
+
+
 
 
 }

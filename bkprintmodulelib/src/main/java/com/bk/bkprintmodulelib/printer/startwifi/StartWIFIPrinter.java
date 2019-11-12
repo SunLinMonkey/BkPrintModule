@@ -116,7 +116,27 @@ public class StartWIFIPrinter extends BasePrinter implements IPrinter {
 
     @Override
     public void printQRCode(String content) {
-        builder.appendQrCodeWithAlignment(content.getBytes(), ICommandBuilder.QrCodeModel.No2, ICommandBuilder.QrCodeLevel.L, 16, ICommandBuilder.AlignmentPosition.Center);
+        ICommandBuilder.AlignmentPosition position;
+        switch ( getHelpEntity().getGrivaty()) {
+            case TextGravity.GRAVITY_LEFT: {
+                position = ICommandBuilder.AlignmentPosition.Left;
+                break;
+            }
+            case TextGravity.GRAVITY_RIGHT: {
+                position = ICommandBuilder.AlignmentPosition.Right;
+                break;
+            }
+            case TextGravity.GRAVITY_CENTER: {
+                position = ICommandBuilder.AlignmentPosition.Center;
+                break;
+            }
+            default: {
+                position = ICommandBuilder.AlignmentPosition.Center;
+                break;
+            }
+
+        }
+        builder.appendQrCodeWithAlignment(content.getBytes(), ICommandBuilder.QrCodeModel.No2, ICommandBuilder.QrCodeLevel.L, 16, position);
     }
 
 
