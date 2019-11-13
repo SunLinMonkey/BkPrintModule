@@ -6,9 +6,11 @@ import android.graphics.Bitmap;
 import com.bk.bkprintmodulelib.cosntants.PrintCmd;
 import com.bk.bkprintmodulelib.cosntants.StatusConstans;
 import com.bk.bkprintmodulelib.cosntants.TextGravity;
+import com.bk.bkprintmodulelib.cosntants.TextSize;
 import com.bk.bkprintmodulelib.print_help.AbstractPrintStatus;
 import com.bk.bkprintmodulelib.print_help.HelpEntity;
 import com.bk.bkprintmodulelib.print_help.IPrinter;
+import com.bk.bkprintmodulelib.print_help.SharedPrefUtil;
 import com.bk.bkprintmodulelib.printer.BasePrinter;
 import com.bk.bkprintmodulelib.printer.startwifi.PrinterSettingManager;
 import com.bk.bkprintmodulelib.printer.startwifi.PrinterSettings;
@@ -25,7 +27,7 @@ import java.net.UnknownHostException;
 
 
 /**
- * 这里有点特殊，有两种类型的打印。都特么叫WiFi,我就放一起了。算是个秉坤化的东西把
+ * 这里有点特殊，有两种类型的打印。都叫WiFi,我就放一起了。算是个秉坤化的东西把
  */
 public class WIFIPrinter extends BasePrinter implements IPrinter {
 
@@ -35,18 +37,13 @@ public class WIFIPrinter extends BasePrinter implements IPrinter {
     public void initPrintDriver(Context context, AbstractPrintStatus listener) {
         printString = new StringBuffer();
         printString.append(PrintCmd.initialPrint());
-        listener.onPrinterInitSucceed(StatusConstans.Code.SUCCESS,"");
+        listener.onPrinterInitSucceed(StatusConstans.Code.SUCCESS, "");
     }
+
 
     @Override
     public void initPrintConnection(Context context, AbstractPrintStatus listener) {
-        PrinterSettingManager settingManager = new PrinterSettingManager(context);
-        PrinterSettings settings = settingManager.getPrinterSettings();
-        if (settings == null) {
-            listener.onConnectFailed("", "请连接打印机");
-            return;
-        }
-        listener.onConnectSucceed(StatusConstans.Code.SUCCESS,"");
+        listener.onConnectSucceed(StatusConstans.Code.SUCCESS, "");
     }
 
     @Override
@@ -57,10 +54,10 @@ public class WIFIPrinter extends BasePrinter implements IPrinter {
 
     @Override
     public void printText(String content) {
+        getLocalTextSize();
         getLocalGravity();
         printString.append(content);
     }
-
 
 
     @Override
@@ -69,12 +66,10 @@ public class WIFIPrinter extends BasePrinter implements IPrinter {
     }
 
 
-
     @Override
     public void printQRCode(String content) {
 
     }
-
 
 
     @Override
@@ -106,6 +101,7 @@ public class WIFIPrinter extends BasePrinter implements IPrinter {
 
     @Override
     public void cutPaper() {
+        printBlankLine(3);
         printString.append(PrintCmd.CutString());
     }
 
@@ -115,17 +111,20 @@ public class WIFIPrinter extends BasePrinter implements IPrinter {
         if (isUDP) {
             new BroadCastUdp(printString.toString()).start();
         } else {
-            startPrintWifi();
+            startPrintWifi(context);
         }
     }
 
-    private void startPrintWifi() {
-        try {
-            Socket printClient = null;
-            PrintWriter printWrite = null;
-            BufferedReader printRead = null;
+    private void startPrintWifi(Context context) {
 
-            printClient = getSocket();
+
+        Socket printClient = null;
+        PrintWriter printWrite = null;
+        BufferedReader printRead = null;
+
+        try {
+
+            printClient = getSocket(context);
 
             if (printClient.isConnected()) {
                 printRead = new BufferedReader(new InputStreamReader(printClient.getInputStream()));
@@ -138,9 +137,6 @@ public class WIFIPrinter extends BasePrinter implements IPrinter {
                 }
             }
 
-            printRead.close();
-            printWrite.close();
-            printClient.close();
 
         } catch (UnknownHostException e) {
             // 连接失败
@@ -151,11 +147,26 @@ public class WIFIPrinter extends BasePrinter implements IPrinter {
         } catch (IOException e) {
             // 连接失败
             e.printStackTrace();
+        } finally {
+            try {
+                if (printRead != null) {
+                    printRead.close();
+                }
+                if (printWrite != null) {
+                    printWrite.close();
+                }
+
+                if (printClient != null) {
+                    printClient.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
-    private Socket getSocket() throws IOException {
-        String strWifiPrintIp = null;//SharedPrefUtil.getWifiPrintIp(cxt);//todo 获取存的IP
+    private Socket getSocket(Context context) throws IOException {
+        String strWifiPrintIp = SharedPrefUtil.getWifiPrintIp(context);
         if (strWifiPrintIp == null || "".equals(strWifiPrintIp)) {
             strWifiPrintIp = "192.168.1.87:9100";
         }
@@ -203,9 +214,42 @@ public class WIFIPrinter extends BasePrinter implements IPrinter {
         }
     }
 
+    /**
+     * 将通用布局位置转成本打印机实体类使用的布局位置
+     *
+     * @param textSize
+     */
+    private void getLocalTextSize(int textSize) {
+        switch (textSize) {
+            case TextSize.TEXT_SIZE_DOWN_1: {
+                break;
+            }
+            case TextSize.TEXT_SIZE_DOWN_2: {
+                break;
+            }
+            case TextSize.TEXT_SIZE_DEFAULT: {
+                printString.append(PrintCmd.initialPrint());
+                break;
+            }
+            case TextSize.TEXT_SIZE_UP_3: {
+                printString.append(PrintCmd.doubleFont());
+                break;
+            }
+            case TextSize.TEXT_SIZE_UP_4: {
+                printString.append(PrintCmd.doubleFont());
+
+                break;
+            }
+            default: {
+                printString.append(PrintCmd.initialPrint());
+                break;
+            }
+        }
+    }
+
     @Override
     protected void getLocalTextSize() {
-
+        getLocalTextSize(getHelpEntity().getTestSize());
     }
 
     @Override

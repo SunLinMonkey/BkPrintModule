@@ -1,6 +1,9 @@
 package com.bk.bkprintmodulelib.printer;
 
+import android.content.Context;
+
 import com.bk.bkprintmodulelib.factory.HelpEntityFactory;
+import com.bk.bkprintmodulelib.print_help.AbstractPrintStatus;
 import com.bk.bkprintmodulelib.print_help.HelpEntity;
 
 public abstract class BasePrinter {
@@ -42,6 +45,8 @@ public abstract class BasePrinter {
         }
         return helpEntity;
     }
+
+
 
 
     protected abstract void getLocalTextSize();

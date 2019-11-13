@@ -2,8 +2,13 @@ package com.bk.bkprintmodulelib;
 
 import android.app.Application;
 import android.content.Context;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.util.Log;
 import android.util.SparseArray;
+import android.widget.Toast;
 
 import com.bk.bkprintmodulelib.anotation.AnotationPrinterType;
 import com.bk.bkprintmodulelib.cosntants.CommandType;
@@ -33,6 +38,7 @@ public class PrinterManager {
     private ExecutorService consumerSingleThreadExecutor;
 
     private DataChannel channel;
+
 
     /**
      * 默认打印张数
@@ -363,7 +369,7 @@ public class PrinterManager {
      * @param abstractPrintStatus
      */
     private void doPrint(Context context, IPrinter pekonPrinter, IPrintDataAnalysis iPrintDatas, int printNums, AbstractPrintStatus abstractPrintStatus) {
-        new Thread(getPrintRunnable(pekonPrinter, context, iPrintDatas, printNums, abstractPrintStatus)).run();
+        new Thread(getPrintRunnable(pekonPrinter, context, iPrintDatas, printNums, abstractPrintStatus)).start();
     }
 
 
@@ -387,11 +393,11 @@ public class PrinterManager {
                         for (PrintLineContentEntity printData : printDatas) {
                             analysisContent(context, pekonPrinter, printData, DEAFAULT_PRINT_NUM);
                         }
-                        abstractPrintStatus.onPrinterFinished(StatusConstans.Code.SUCCESS, "");
+                        backListnerPrintFinshed(abstractPrintStatus);
                     }
 
                 } catch (Exception e) {
-                    abstractPrintStatus.onPrintFailed("", e.getMessage());
+                    backListnerPrintFailed(e, abstractPrintStatus);
                 }
             }
         };
@@ -403,16 +409,43 @@ public class PrinterManager {
             @Override
             public void run() {
                 try {
+                    int i = 0;
                     List<PrintLineContentEntity> printDatas = iPrintDatas.getPrintDatas();
+                    System.out.println(printDatas.size());
                     for (PrintLineContentEntity printData : printDatas) {
                         analysisContent(context, pekonPrinter, printData, printNums);
+                        System.out.println(i++);
                     }
-                    abstractPrintStatus.onPrinterFinished(StatusConstans.Code.SUCCESS, "打印完成");
+                    backListnerPrintFinshed(abstractPrintStatus);
                 } catch (Exception e) {
-                    abstractPrintStatus.onPrintFailed("", e.getMessage());
+                    backListnerPrintFailed(e, abstractPrintStatus);
                 }
             }
         };
+    }
+
+    /**
+     * 打印失败的回调回主线程
+     *
+     * @param e
+     * @param abstractPrintStatus
+     */
+    private void backListnerPrintFailed(Exception e, AbstractPrintStatus abstractPrintStatus) {
+        Looper.prepare();
+        abstractPrintStatus.onPrintFailed(StatusConstans.Code.FILED, e.getMessage());
+        Looper.loop();
+    }
+
+    /**
+     * 打印完成的回调回主线程
+     *
+     * @param e
+     * @param abstractPrintStatus
+     */
+    private void backListnerPrintFinshed(AbstractPrintStatus abstractPrintStatus) {
+        Looper.prepare();
+        abstractPrintStatus.onPrinterFinished(StatusConstans.Code.SUCCESS, "打印完成");
+        Looper.loop();
     }
 
 
@@ -489,6 +522,23 @@ public class PrinterManager {
         }
     }
 
+
+    /**
+     * 给Wifi打印设置的ip和port
+     *
+     * @param context
+     * @param ipAndPort
+     */
+    public void saveWifiPrinterIpAndPort(Context context, String ipAndPort) {
+        // 记录打印地址
+        SharedPrefUtil.setWifiPrintIp(context, ipAndPort);
+    }
+
+//    /**
+//     * 给Wifi打印设置的另一种模式
+//     */
+//    public void openWifiUDP() {
+//    }
 
     private void initPrinter(IPrinter pekonPrinter, Context context, AbstractPrintStatus abstractPrintStatus) {
         pekonPrinter.initPrintDriver(context, abstractPrintStatus);

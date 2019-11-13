@@ -211,6 +211,9 @@ public class BluetoothPrinter extends BasePrinter implements IPrinter {
      * @return
      */
     protected void getLocalTextSize() {
+        if (!isTextSizeChanged()){
+            return;
+        }
         HelpEntity helpEntity = getHelpEntity();
         switch (helpEntity.getTestSize()) {
             case TextSize.TEXT_SIZE_DOWN_2:

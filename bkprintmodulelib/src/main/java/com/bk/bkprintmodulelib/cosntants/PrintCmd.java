@@ -466,6 +466,7 @@ public class PrintCmd {
         return "";
     }
 
+
     public static byte[] printBarcode(String stBarcode) {
         int iLength = stBarcode.length() + 4;
         byte[] returnText = new byte[iLength];

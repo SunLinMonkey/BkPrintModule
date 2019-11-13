@@ -57,7 +57,10 @@ public class PrintContentFactory {
         return printLineContentEntity;
     }
 
-
+    /**
+     * 换行/打印空行
+     * @return
+     */
     public static PrintLineContentEntity createBlankLine(int nums) {
         PrintLineContentEntity printLineContentEntity = new PrintLineContentEntity();
         printLineContentEntity.setCommand(CommandType.CMMAND_BLANKLINE);
@@ -66,6 +69,10 @@ public class PrintContentFactory {
     }
 
 
+    /**
+     * 换行/打印空行
+     * @return
+     */
     public static PrintLineContentEntity createBlankLine() {
         return createBlankLine(1);
     }

@@ -17,6 +17,7 @@ import com.bk.bkprintmodulelib.cosntants.PekonPrinterType;
  * @author Zhoujun 说明：SharedPreferences的操作工具类，需要缓存到SharedPreferences中的数据在此设置。
  */
 public class SharedPrefUtil {
+    private static final String WIFI_PRINT_IP = "wifi_print_ip";//
     private static final String CURRENT_BLUETOOTH_DEVICE_ADDRESS = "current_bluetooth_address";//当前已选择的蓝牙打印设备
     private static final String MAIN_PRINTER = "main_printer";
     private static final String HELP_PRINTER = "help_printer";
@@ -93,6 +94,30 @@ public class SharedPrefUtil {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
         int anInt = sp.getInt(HELP_PRINTER, PekonPrinterType.PRINTER_SUMMI);
         return anInt;
+    }
+
+
+    /**
+     * 设置打印小票地址
+     *
+     * @param context
+     */
+    public static void setWifiPrintIp(Context context, String strAddress) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+        Editor e = sp.edit();
+        e.putString(WIFI_PRINT_IP, strAddress);
+        e.commit();
+    }
+
+    /**
+     * 获取打印小票地址
+     *
+     * @param context
+     * @return
+     */
+    public static String getWifiPrintIp(Context context) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+        return sp.getString(WIFI_PRINT_IP, "");
     }
 
 

@@ -21,7 +21,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        SharedPrefUtil.getInstance().setMainPrinter(PekonPrinterType.PRINTER_USB,this);
+        SharedPrefUtil.getInstance().setMainPrinter(PekonPrinterType.PRINTER_WIFI,this);
         PrinterManager.getInstance().init(this);
 
 //        PrinterManager.getInstance().prepareLoop(this, new AbstractPrintStatus() {
@@ -105,7 +105,7 @@ public class MainActivity extends Activity {
     }
 
     public void resetPrinter(View view) {
-
+        PrinterManager.getInstance().saveWifiPrinterIpAndPort(this,"192.168.30.193:2088");
         PrinterManager.getInstance().getPrint().resetPrintConnection(this, new AbstractPrintStatus() {
             @Override
             public void onPrinterFinished(String errorCode, String errorMessage) {
