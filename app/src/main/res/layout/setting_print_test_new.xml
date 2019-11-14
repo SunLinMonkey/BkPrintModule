@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fsms="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_medium"
+    android:orientation="vertical">
+
+
+    <TableLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:stretchColumns="1">
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:gravity="center">
+
+            <TextView
+
+                android:layout_height="wrap_content"
+                android:layout_marginRight="5dp"
+                android:gravity="right|center_vertical"
+                android:text="打印类型" />
+
+            <EditText
+                android:id="@+id/et_printType"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+
+                android:focusable="false"
+                android:gravity="center" />
+        </TableRow>
+    </TableLayout>
+
+    <TableLayout
+        android:id="@+id/ll_wifiPrint"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:stretchColumns="1">
+
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+
+            android:focusable="true"
+            android:focusableInTouchMode="true">
+
+            <TextView
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginRight="5dp"
+                android:gravity="right|center_vertical"
+                android:text="IP" />
+
+            <EditText
+                android:id="@+id/etIp1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:imeOptions="actionNext"
+                android:inputType="number"
+                android:maxLength="3"
+                android:selectAllOnFocus="true"
+                android:singleLine="true"
+                android:text="192" />
+
+            <TextView
+                android:layout_width="4dp"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="1dp"
+                android:gravity="center"
+                android:text="." />
+
+            <EditText
+                android:id="@+id/etIp2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+
+                android:gravity="center"
+                android:imeOptions="actionNext"
+                android:inputType="number"
+                android:maxLength="3"
+                android:selectAllOnFocus="true"
+                android:singleLine="true"
+                android:text="168" />
+
+            <TextView
+                android:layout_width="4dp"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="1dp"
+                android:gravity="center"
+                android:text="." />
+
+            <EditText
+                android:id="@+id/etIp3"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+
+                android:gravity="center"
+                android:imeOptions="actionNext"
+                android:inputType="number"
+                android:maxLength="3"
+                android:selectAllOnFocus="true"
+                android:singleLine="true"
+                android:text="1" />
+
+            <TextView
+                android:layout_width="4dp"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="1dp"
+                android:gravity="center"
+                android:text="." />
+
+            <EditText
+                android:id="@+id/etIp4"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+
+                android:gravity="center"
+                android:imeOptions="actionNext"
+                android:inputType="number"
+                android:maxLength="3"
+                android:selectAllOnFocus="true"
+                android:singleLine="true"
+                android:text="87" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+
+            android:layout_marginTop="10dp">
+
+            <TextView
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginRight="5dp"
+                android:gravity="right|center_vertical"
+                android:text="端口" />
+
+            <EditText
+                android:id="@+id/etPort"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:focusable="false"
+                android:gravity="center"
+                android:text="9100" />
+        </TableRow>
+
+    </TableLayout>
+
+    <TableLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:stretchColumns="1">
+
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/tvPaperSelection"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="5dp"
+                android:gravity="right|center_vertical"
+                android:text="纸宽" />
+
+            <EditText
+                android:id="@+id/etPaperSelection"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:focusable="false"
+                android:gravity="center" />
+        </TableRow>
+    </TableLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_select_print"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:layout_marginTop="10dp"
+
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="5dp"
+            android:gravity="right|center_vertical"
+            android:text="打印机" />
+
+        <TextView
+            android:id="@+id/tv_select_print"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="100dp">
+
+        <Button
+            android:id="@+id/btn_save"
+
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="保存" />
+
+        <Button
+            android:id="@+id/btn_reset"
+
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="重置" />
+
+        <Button
+            android:id="@+id/btn_print"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="打印" />
+    </LinearLayout>
+
+</LinearLayout>

@@ -12,6 +12,7 @@ import com.bk.bkprintmodulelib.cosntants.StatusConstans;
 import com.bk.bkprintmodulelib.cosntants.TextGravity;
 import com.bk.bkprintmodulelib.cosntants.TextSize;
 import com.bk.bkprintmodulelib.print_help.AbstractPrintStatus;
+import com.bk.bkprintmodulelib.print_help.DialogHelper;
 import com.bk.bkprintmodulelib.print_help.HelpEntity;
 import com.bk.bkprintmodulelib.print_help.IPrinter;
 import com.bk.bkprintmodulelib.printer.BasePrinter;
@@ -60,16 +61,18 @@ public class BluetoothPrinter extends BasePrinter implements IPrinter {
         }
 
         private void initFailed() {
+            DialogHelper.hideProgressDialog();
             if (listenerWeakReference != null && listenerWeakReference.get() != null) {
-                listenerWeakReference.get().onConnectFailed(StatusConstans.Code.FILED, "蓝牙初始化失败");
+                listenerWeakReference.get().onConnectFailed(StatusConstans.Code.FILED, "蓝牙连接失败");
             }
             isConnected = false;
         }
 
         private void initSucceed() {
+            DialogHelper.hideProgressDialog();
             isConnected = true;
             if (listenerWeakReference != null && listenerWeakReference.get() != null) {
-                listenerWeakReference.get().onConnectSucceed(StatusConstans.Code.SUCCESS,"");
+                listenerWeakReference.get().onConnectSucceed(StatusConstans.Code.SUCCESS,"蓝牙连接成功");
             }
         }
     }
@@ -79,7 +82,7 @@ public class BluetoothPrinter extends BasePrinter implements IPrinter {
     public void initPrintDriver(Context context, AbstractPrintStatus listener) {
         if (mPrinter != null) {
             mPrinter.init();
-            listener.onPrinterInitSucceed(StatusConstans.Code.SUCCESS,"");
+            listener.onPrinterInitSucceed(StatusConstans.Code.SUCCESS,"打印机初始化成功");
         }
     }
 
@@ -108,7 +111,7 @@ public class BluetoothPrinter extends BasePrinter implements IPrinter {
     }
 
 
-    private void btSetting(Context activity, MyHandler mHandler) {
+    private void btSetting(final Context activity, MyHandler mHandler) {
         if (myOpertion != null) {
             myOpertion.close();
         }
@@ -117,6 +120,8 @@ public class BluetoothPrinter extends BasePrinter implements IPrinter {
         myOpertion.chooseDevice(new BluetoothDeviceListDialog.OnChosenListener() {
             @Override
             public void onChosen(final String address, boolean re_pair, String name) {
+
+                DialogHelper.showProgressDialog(activity,"正在连接，请稍等...");
                 new Thread(new Runnable() {
                     public void run() {
                         myOpertion.open(address);

@@ -1,6 +1,7 @@
 package com.bk.bkprintmodule;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -21,9 +22,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        SharedPrefUtil.getInstance().setMainPrinter(PekonPrinterType.PRINTER_WIFI,this);
-        PrinterManager.getInstance().init(this);
-
+        startActivity(new Intent(this,PrintTestActivityNew.class));
 //        PrinterManager.getInstance().prepareLoop(this, new AbstractPrintStatus() {
 //            @Override
 //            public void onPrinterFinished() {

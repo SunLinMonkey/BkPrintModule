@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="print_type">
+
+        <item>无线打印</item>
+        <item>蓝牙打印</item>
+        <item>USB串口</item>
+        <item>USB并口</item>
+        <item>美素wifi</item>
+        <item>联迪</item>
+        <item>蓝牙盒子</item>
+        <item>拍档</item>
+        <item>USB打印</item>
+        <item>商米打印</item>
+        <item>新wifi</item>
+
+    </string-array>
+
+    <string-array name="print_paper_selection">
+        <item>"58mm"</item>
+        <item>"80mm"</item>
+    </string-array>
+</resources>
