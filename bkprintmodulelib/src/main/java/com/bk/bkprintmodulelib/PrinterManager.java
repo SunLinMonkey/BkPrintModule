@@ -393,11 +393,11 @@ public class PrinterManager {
                         for (PrintLineContentEntity printData : printDatas) {
                             analysisContent(context, pekonPrinter, printData, DEAFAULT_PRINT_NUM);
                         }
-                        backListnerPrintFinshed(abstractPrintStatus);
+//                        backListnerPrintFinshed(abstractPrintStatus);
                     }
 
                 } catch (Exception e) {
-                    backListnerPrintFailed(e, abstractPrintStatus);
+//                    backListnerPrintFailed(e, abstractPrintStatus);
                 }
             }
         };
