@@ -37,7 +37,7 @@ public abstract class AbstractPrintStatus {
     /**
      * 打印完成
      */
-    public abstract void onPrinterFinished(String finshCode, String msg);
+    public abstract void onPrintFinished(String finshCode, String msg);
 
     /**
      * 打印失败

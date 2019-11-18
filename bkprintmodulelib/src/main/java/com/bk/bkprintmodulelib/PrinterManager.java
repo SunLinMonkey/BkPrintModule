@@ -4,11 +4,9 @@ import android.app.Application;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
 import android.util.SparseArray;
-import android.widget.Toast;
 
 import com.bk.bkprintmodulelib.anotation.AnotationPrinterType;
 import com.bk.bkprintmodulelib.cosntants.CommandType;
@@ -40,6 +38,10 @@ public class PrinterManager {
     private DataChannel channel;
 
 
+    private final int PRINT_FINSH = 1;
+    private final int PRINT_FAILE = 2;
+    private AbstractPrintStatus abstractPrintStatus;
+
     /**
      * 默认打印张数
      */
@@ -49,6 +51,29 @@ public class PrinterManager {
 
     }
 
+
+    private Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            Bundle data = msg.getData();
+            String code = data.getString("code");
+            String message = data.getString("message");
+            switch (msg.what) {
+                case PRINT_FINSH:
+                    if (abstractPrintStatus != null) {
+                        abstractPrintStatus.onPrintFinished(code, message);
+                    }
+
+                    break;
+                case PRINT_FAILE:
+                    if (abstractPrintStatus != null) {
+                        abstractPrintStatus.onPrintFailed(code, message);
+                    }
+                    break;
+            }
+        }
+    };
 
     /**
      * 保存设置的主打印机
@@ -297,7 +322,7 @@ public class PrinterManager {
             }
 
             @Override
-            public void onPrinterFinished(String finshCode, String msg) {
+            public void onPrintFinished(String finshCode, String msg) {
 
             }
         });
@@ -327,7 +352,7 @@ public class PrinterManager {
             }
 
             @Override
-            public void onPrinterFinished(String finshCode, String msg) {
+            public void onPrintFinished(String finshCode, String msg) {
 
             }
 
@@ -393,11 +418,11 @@ public class PrinterManager {
                         for (PrintLineContentEntity printData : printDatas) {
                             analysisContent(context, pekonPrinter, printData, DEAFAULT_PRINT_NUM);
                         }
-//                        backListnerPrintFinshed(abstractPrintStatus);
+                        backListnerPrintFinshed(abstractPrintStatus);
                     }
 
                 } catch (Exception e) {
-//                    backListnerPrintFailed(e, abstractPrintStatus);
+                    backListnerPrintFailed(e, abstractPrintStatus);
                 }
             }
         };
@@ -433,9 +458,14 @@ public class PrinterManager {
      * @param abstractPrintStatus
      */
     private void backListnerPrintFailed(Exception e, AbstractPrintStatus abstractPrintStatus) {
-        Looper.prepare();
-        abstractPrintStatus.onPrintFailed(StatusConstans.Code.FILED, e.getMessage());
-        Looper.loop();
+        this.abstractPrintStatus = abstractPrintStatus;
+        Message message = Message.obtain();
+        Bundle bundle = new Bundle();
+        bundle.putString("code",StatusConstans.Code.FILED);
+        bundle.putString("message",e.getMessage());
+        message.setData(bundle);
+        message.what = PRINT_FAILE;
+        mHandler.sendMessage(message);
     }
 
     /**
@@ -445,9 +475,14 @@ public class PrinterManager {
      * @param abstractPrintStatus
      */
     private void backListnerPrintFinshed(AbstractPrintStatus abstractPrintStatus) {
-        Looper.prepare();
-        abstractPrintStatus.onPrinterFinished(StatusConstans.Code.SUCCESS, "打印完成");
-        Looper.loop();
+        this.abstractPrintStatus = abstractPrintStatus;
+        Message message = Message.obtain();
+        Bundle bundle = new Bundle();
+        bundle.putString("code",StatusConstans.Code.SUCCESS);
+        bundle.putString("message","打印完成");
+        message.setData(bundle);
+        message.what = PRINT_FINSH;
+        mHandler.sendMessage(message);
     }
 
 

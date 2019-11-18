@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -90,17 +91,17 @@ public class PrintTestActivityNew extends Activity implements View.OnClickListen
         findView();
 
 
-//        PrinterManager.getInstance().prepareLoop(this, new AbstractPrintStatus() {
-//            @Override
-//            public void onPrinterFinished(String finshCode, String msg) {
-//
-//            }
-//
-//            @Override
-//            public void onPrintFailed(String errorCode, String errorMessage) {
-//
-//            }
-//        });
+        PrinterManager.getInstance().prepareLoop(this, new AbstractPrintStatus() {
+            @Override
+            public void onPrintFinished(String finshCode, String msg) {
+                showToast(msg);
+            }
+
+            @Override
+            public void onPrintFailed(String errorCode, String errorMessage) {
+                showToast(errorMessage);
+            }
+        });
     }
 
 
@@ -349,32 +350,34 @@ public class PrintTestActivityNew extends Activity implements View.OnClickListen
     }
 
     private void printTest() {
-//        PrinterManager.getInstance().addPrintContent(new TestPrintDataAnalysis(this, "print test content"));
-        PrinterManager.getInstance().printContent(this, new TestPrintDataAnalysis(this, "print test content"), 2,new AbstractPrintStatus() {
-
-            @Override
-            public void onPrinterFinished(String finshCode, String msg) {
-
-            }
-
-            @Override
-            public void onPrintFailed(String errorCode, String errorMessage) {
-
-            }
-
-            @Override
-            public void onConnectFailed(String errorCode, String errorMessage) {
-                super.onConnectFailed(errorCode, errorMessage);
-                showToast(errorMessage);
-            }
-
-            @Override
-            public void onPrinterInitFailed(String errorCode, String errorMessage) {
-                super.onPrinterInitFailed(errorCode, errorMessage);
-                showToast(errorMessage);
-            }
-
-        });
+        PrinterManager.getInstance().addPrintContent(new TestPrintDataAnalysis(this, "print test content"));
+//        PrinterManager.getInstance().printContent(this, new TestPrintDataAnalysis(this, "print test content"), new AbstractPrintStatus() {
+//
+//            @Override
+//            public void onPrintFinished(String finshCode, String msg) {
+//                Log.e(TAG, "onPrintFinished: "+msg );
+//                showToast(msg);
+//            }
+//
+//            @Override
+//            public void onPrintFailed(String errorCode, String errorMessage) {
+//                Log.e(TAG, "onPrintFailed: "+errorMessage );
+//                showToast(errorMessage);
+//            }
+//
+//            @Override
+//            public void onConnectFailed(String errorCode, String errorMessage) {
+//                super.onConnectFailed(errorCode, errorMessage);
+//                showToast(errorMessage);
+//            }
+//
+//            @Override
+//            public void onPrinterInitFailed(String errorCode, String errorMessage) {
+//                super.onPrinterInitFailed(errorCode, errorMessage);
+//                showToast(errorMessage);
+//            }
+//
+//        });
     }
 
     @Override
@@ -386,7 +389,7 @@ public class PrintTestActivityNew extends Activity implements View.OnClickListen
     private void printReset() {
         PrinterManager.getInstance().getPrint().resetPrintConnection(this, new AbstractPrintStatus() {
             @Override
-            public void onPrinterFinished(String errorCode, String errorMessage) {
+            public void onPrintFinished(String errorCode, String errorMessage) {
 
             }
 
@@ -481,9 +484,6 @@ public class PrintTestActivityNew extends Activity implements View.OnClickListen
         PrinterManager.getInstance().saveWifiPrinterIpAndPort(this, strIPAddress);
         btn_save.setClickable(true);
     }
-
-
-
 
 
 
@@ -602,30 +602,5 @@ public class PrintTestActivityNew extends Activity implements View.OnClickListen
     public void showToast(String message) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
-
-
-    // 打印小票指令
-    public static class PrintCmd {
-        /**
-         * 初始化
-         */
-        public static String initialPrint() {
-            byte[] result = new byte[2];
-            result[0] = 27;
-            result[1] = 64;
-            return new String(result);
-        }
-
-        /**
-         * 切纸
-         */
-        public static String Cut() {
-            byte[] result = new byte[2];
-            result[0] = 27;
-            result[1] = 105;
-            return new String(result);
-        }
-    }
-
 
 }

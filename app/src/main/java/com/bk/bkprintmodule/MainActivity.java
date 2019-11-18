@@ -25,7 +25,7 @@ public class MainActivity extends Activity {
         startActivity(new Intent(this,PrintTestActivityNew.class));
 //        PrinterManager.getInstance().prepareLoop(this, new AbstractPrintStatus() {
 //            @Override
-//            public void onPrinterFinished() {
+//            public void onPrintFinished() {
 //
 //            }
 //
@@ -61,9 +61,9 @@ public class MainActivity extends Activity {
     private void print() {
         PrinterManager.getInstance().printContent( this, new TestPrintDataAnalysis(this,"测试打印"), new AbstractPrintStatus() {
             @Override
-            public void onPrinterFinished(String errorCode, String errorMessage) {
+            public void onPrintFinished(String errorCode, String errorMessage) {
                 showToast("打印完成");
-                Log.e(TAG, "onPrinterFinished: 打印完成");
+                Log.e(TAG, "onPrintFinished: 打印完成");
             }
 
             @Override
@@ -75,25 +75,25 @@ public class MainActivity extends Activity {
             @Override
             public void onConnectSucceed(String errorCode, String errorMessage) {
                 showToast(" 服务连接成功");
-                Log.e(TAG, "onPrinterFinished: 服务连接成功");
+                Log.e(TAG, "onPrintFinished: 服务连接成功");
             }
 
             @Override
             public void onConnectFailed(String errorCode, String errorMessage) {
                 showToast(" 服务连接失败");
-                Log.e(TAG, "onPrinterFinished: 服务连接失败");
+                Log.e(TAG, "onPrintFinished: 服务连接失败");
             }
 
             @Override
             public void onPrinterInitFailed(String errorCode, String errorMessage) {
                 showToast("打印机初始化失败");
-                Log.e(TAG, "onPrinterFinished: 打印机初始化失败");
+                Log.e(TAG, "onPrintFinished: 打印机初始化失败");
             }
 
             @Override
             public void onPrinterInitSucceed(String errorCode, String errorMessage) {
                 showToast("打印机初始化成功");
-                Log.e(TAG, "onPrinterFinished: 打印机初始化成功");
+                Log.e(TAG, "onPrintFinished: 打印机初始化成功");
             }
         });
     }
@@ -107,9 +107,9 @@ public class MainActivity extends Activity {
         PrinterManager.getInstance().saveWifiPrinterIpAndPort(this,"192.168.30.193:2088");
         PrinterManager.getInstance().getPrint().resetPrintConnection(this, new AbstractPrintStatus() {
             @Override
-            public void onPrinterFinished(String errorCode, String errorMessage) {
+            public void onPrintFinished(String errorCode, String errorMessage) {
                 showToast("打印完成");
-                Log.e(TAG, "onPrinterFinished: 打印完成");
+                Log.e(TAG, "onPrintFinished: 打印完成");
             }
 
             @Override
@@ -122,28 +122,28 @@ public class MainActivity extends Activity {
             public void onConnectSucceed(String errorCode, String errorMessage) {
                 super.onConnectSucceed(errorCode,errorMessage);
                 showToast("连接成功");
-                Log.e(TAG, "onPrinterFinished: 连接成功");
+                Log.e(TAG, "onPrintFinished: 连接成功");
             }
 
             @Override
             public void onConnectFailed(String errorCode, String errorMessage) {
                 super.onConnectFailed(errorCode, errorMessage);
                 showToast("连接失败");
-                Log.e(TAG, "onPrinterFinished: 连接失败");
+                Log.e(TAG, "onPrintFinished: 连接失败");
             }
 
             @Override
             public void onPrinterInitFailed(String errorCode, String errorMessage) {
                 super.onPrinterInitFailed(errorCode, errorMessage);
                 showToast("初始化失败");
-                Log.e(TAG, "onPrinterFinished: 初始化失败");
+                Log.e(TAG, "onPrintFinished: 初始化失败");
             }
 
             @Override
             public void onPrinterInitSucceed(String errorCode, String errorMessage) {
                 super.onPrinterInitSucceed(errorCode,errorMessage);
                 showToast("初始化成功");
-                Log.e(TAG, "onPrinterFinished: 初始化成功");
+                Log.e(TAG, "onPrintFinished: 初始化成功");
             }
         });
     }
