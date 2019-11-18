@@ -57,6 +57,7 @@ public class SummiAidlUtil {
         if (!connect){
             initStatusListener.onFailed("","商米打印连接失败");
         }
+        initStatusListener.onSucceed();
     }
 
 

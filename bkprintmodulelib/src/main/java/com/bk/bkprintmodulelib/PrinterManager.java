@@ -132,11 +132,12 @@ public class PrinterManager {
             channel = new DataChannelFIFOImpl();
         }
 
-        if (null == produceSingleThreadExecutor) {
+
+        if (null == produceSingleThreadExecutor || produceSingleThreadExecutor.isShutdown()) {
             produceSingleThreadExecutor = Executors.newSingleThreadExecutor();
         }
 
-        if (null == consumerSingleThreadExecutor) {
+        if (null == consumerSingleThreadExecutor || consumerSingleThreadExecutor.isShutdown()) {
             consumerSingleThreadExecutor = Executors.newSingleThreadExecutor();
         }
 
@@ -355,9 +356,7 @@ public class PrinterManager {
 
 
     private void printContent(Context context, IPrinter pekonPrinter, IPrintDataAnalysis iPrintDatas, int printNums, AbstractPrintStatus abstractPrintStatus) {
-        for (int nums = printNums; nums > 0; nums--) {
-            doPrint(context, pekonPrinter, iPrintDatas, nums, abstractPrintStatus);
-        }
+        doPrint(context, pekonPrinter, iPrintDatas, printNums, abstractPrintStatus);
     }
 
     /**
@@ -389,6 +388,7 @@ public class PrinterManager {
                 try {
                     while (true) {
                         IPrintDataAnalysis iPrintDataAnalysis = channel.get();
+                        Log.e("9527", "已获取产品");
                         List<PrintLineContentEntity> printDatas = iPrintDataAnalysis.getPrintDatas();
                         for (PrintLineContentEntity printData : printDatas) {
                             analysisContent(context, pekonPrinter, printData, DEAFAULT_PRINT_NUM);
@@ -409,12 +409,14 @@ public class PrinterManager {
             @Override
             public void run() {
                 try {
-                    int i = 0;
-                    List<PrintLineContentEntity> printDatas = iPrintDatas.getPrintDatas();
-                    System.out.println(printDatas.size());
-                    for (PrintLineContentEntity printData : printDatas) {
-                        analysisContent(context, pekonPrinter, printData, printNums);
-                        System.out.println(i++);
+                    for (int nums = printNums; nums > 0; nums--) {
+                        int i = 0;
+                        List<PrintLineContentEntity> printDatas = iPrintDatas.getPrintDatas();
+                        System.out.println(printDatas.size());
+                        for (PrintLineContentEntity printData : printDatas) {
+                            analysisContent(context, pekonPrinter, printData, printNums);
+                            System.out.println(i++);
+                        }
                     }
                     backListnerPrintFinshed(abstractPrintStatus);
                 } catch (Exception e) {

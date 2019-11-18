@@ -88,6 +88,19 @@ public class PrintTestActivityNew extends Activity implements View.OnClickListen
         mContext = this;
         ll_wifiPrint = (TableLayout) findViewById(R.id.ll_wifiPrint);
         findView();
+
+
+//        PrinterManager.getInstance().prepareLoop(this, new AbstractPrintStatus() {
+//            @Override
+//            public void onPrinterFinished(String finshCode, String msg) {
+//
+//            }
+//
+//            @Override
+//            public void onPrintFailed(String errorCode, String errorMessage) {
+//
+//            }
+//        });
     }
 
 
@@ -116,7 +129,7 @@ public class PrintTestActivityNew extends Activity implements View.OnClickListen
         if (settings != null) {
             String name = settings.getModelName();
             String address = settings.getMacAddress();
-            tvSelectPrint.setText(name + "\n" + address);
+            tvSelectPrint.setText(String.format("%s\n%s", name, address));
         }
         tvSelectPrint.setOnClickListener(this);
         llSelectPrint = (LinearLayout) findViewById(R.id.ll_select_print);
@@ -313,19 +326,6 @@ public class PrintTestActivityNew extends Activity implements View.OnClickListen
                 break;
             }
             case R.id.btn_print: {
-//                if (type == 5) {
-//                    wifiMsPrint();
-//                    return;
-//                }
-//                if (type == 6) {
-//                    ldposPrint();
-//                    return;
-//                }
-//
-//                if (type == 7) {
-//                    bluetoothboxprint(true);
-//                    return;
-//                }
                 printTest();
                 break;
             }
@@ -349,7 +349,8 @@ public class PrintTestActivityNew extends Activity implements View.OnClickListen
     }
 
     private void printTest() {
-        PrinterManager.getInstance().printContent(this, new TestPrintDataAnalysis(this, "print test content"), new AbstractPrintStatus() {
+//        PrinterManager.getInstance().addPrintContent(new TestPrintDataAnalysis(this, "print test content"));
+        PrinterManager.getInstance().printContent(this, new TestPrintDataAnalysis(this, "print test content"), 2,new AbstractPrintStatus() {
 
             @Override
             public void onPrinterFinished(String finshCode, String msg) {
@@ -374,6 +375,12 @@ public class PrintTestActivityNew extends Activity implements View.OnClickListen
             }
 
         });
+    }
+
+    @Override
+    protected void onDestroy() {
+        PrinterManager.getInstance().loopEnd();
+        super.onDestroy();
     }
 
     private void printReset() {
