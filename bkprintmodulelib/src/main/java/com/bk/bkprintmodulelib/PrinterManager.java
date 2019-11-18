@@ -32,10 +32,11 @@ public class PrinterManager {
 
     private SparseArray<IPrinter> pekonPrinters;
     private boolean isInLoopModel; //是否是生产消费模式
-    private ExecutorService produceSingleThreadExecutor;
-    private ExecutorService consumerSingleThreadExecutor;
+    private ExecutorService produceSingleThreadExecutor;//生产者线程池
+    private ExecutorService consumerSingleThreadExecutor;//消费者线程池
 
     private DataChannel channel;
+    private Application registApplication; //宿主应用
 
 
     private final int PRINT_FINSH = 1;
@@ -100,9 +101,10 @@ public class PrinterManager {
      *
      * @param application
      */
-    public void init(Context application) {
+    public void init(Application application) {
         AbsDriversFactory driversFactory = new DriversFactory();
         pekonPrinters = driversFactory.getPekonPrinter(application);
+        this.registApplication = application;
     }
 
     /**
@@ -113,6 +115,7 @@ public class PrinterManager {
     public void reGetPrinter(Application application) {
         AbsDriversFactory driversFactory = new DriversFactory();
         pekonPrinters = driversFactory.getPekonPrinter(application.getApplicationContext());
+        this.registApplication = application;
     }
 
 
@@ -303,7 +306,7 @@ public class PrinterManager {
      * @param pekonPrinter
      */
     private void doDriversConnection(final Context context, final IPrintDataAnalysis iPrintDatas, final int printNums, final AbstractPrintStatus abstractPrintStatus, final IPrinter pekonPrinter) {
-        pekonPrinter.initPrintConnection(context, new AbstractPrintStatus() {
+        pekonPrinter.initPrintConnection(registApplication, new AbstractPrintStatus() {
             @Override
             public void onPrintFailed(String errorCode, String errorMessage) {
 
