@@ -51,8 +51,6 @@ public class USBPrinter extends BasePrinter implements IPrinter {
 
     }
 
-//      usbPrintUtil.printMessage(mContext,printStr.toString());
-//                usbPrintUtil.closeConnection(mContext);
 
     @Override
     public void initPrintConnection(Context context, AbstractPrintStatus listener) {
@@ -84,6 +82,7 @@ public class USBPrinter extends BasePrinter implements IPrinter {
             getLocalTextSize();
             getLocalGravity();
             printMessage.append(PrintCmd.generate2DBarcodePartner(content.getBytes("GBK").length, 8));
+            printMessage.append(content);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
@@ -121,15 +120,15 @@ public class USBPrinter extends BasePrinter implements IPrinter {
 
     @Override
     public void cutPaper() {
-        printBlankLine(3);
-        printMessage.append(PrintCmd.CutString());
+        printMessage.append("\n\n\n\n");
+        printMessage.append(PrintCmd.cut());
+//        printStr.append(PrintCmd.Cut());
     }
 
     @Override
     public void startPrint(Context context) {
         if (printMessage == null) {
             listener.onPrintFailed("", "");
-            printMessage.delete(0, printMessage.length() - 1);
             return;
         }
         usbPrintUtil.printMessage(context, printMessage.toString());
@@ -138,7 +137,7 @@ public class USBPrinter extends BasePrinter implements IPrinter {
 
     @Override
     public void openCashBox() {
-//        printMessage.append(PrintCmd.CutString());
+        printMessage.append(PrintCmd.openPartnerBoxString());
     }
 
     @Override

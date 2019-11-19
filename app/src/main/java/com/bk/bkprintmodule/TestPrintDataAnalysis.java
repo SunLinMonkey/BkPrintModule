@@ -64,7 +64,7 @@ public class TestPrintDataAnalysis implements IPrintDataAnalysis {
         String dd =   "1、所有护肤、彩妆、香水产品，一经售出，不予退换，";
         printDatas.add(PrintContentFactory.createText(dd,TextSize.TEXT_SIZE_DEFAULT,TextGravity.GRAVITY_LEFT));
         printDatas.add(PrintContentFactory.createBlankLine(2));
-        printDatas.add(PrintContentFactory.createQRCode("23555222232323"));
+        printDatas.add(PrintContentFactory.createQRCode("23555222232323",TextSize.TEXT_SIZE_DEFAULT,TextGravity.GRAVITY_CENTER));
         printDatas.add(PrintContentFactory.createBlankLine());
         printDatas.add(PrintContentFactory.createCutPage());
         printDatas.add(PrintContentFactory.createStartCommand());

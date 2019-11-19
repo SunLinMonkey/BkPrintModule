@@ -152,6 +152,10 @@ public class PrinterManager {
         return -1;
     }
 
+    public Application getRegistApplication() {
+        return registApplication;
+    }
+
     /**
      * 开启生产消费模式
      */
@@ -306,7 +310,7 @@ public class PrinterManager {
      * @param pekonPrinter
      */
     private void doDriversConnection(final Context context, final IPrintDataAnalysis iPrintDatas, final int printNums, final AbstractPrintStatus abstractPrintStatus, final IPrinter pekonPrinter) {
-        pekonPrinter.initPrintConnection(registApplication, new AbstractPrintStatus() {
+        pekonPrinter.initPrintConnection(context, new AbstractPrintStatus() {
             @Override
             public void onPrintFailed(String errorCode, String errorMessage) {
 

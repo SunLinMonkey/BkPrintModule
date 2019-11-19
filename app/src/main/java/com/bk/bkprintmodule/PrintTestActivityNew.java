@@ -91,17 +91,17 @@ public class PrintTestActivityNew extends Activity implements View.OnClickListen
         findView();
 
 
-        PrinterManager.getInstance().prepareLoop(this, new AbstractPrintStatus() {
-            @Override
-            public void onPrintFinished(String finshCode, String msg) {
-                showToast(msg);
-            }
-
-            @Override
-            public void onPrintFailed(String errorCode, String errorMessage) {
-                showToast(errorMessage);
-            }
-        });
+//        PrinterManager.getInstance().prepareLoop(this, new AbstractPrintStatus() {
+//            @Override
+//            public void onPrintFinished(String finshCode, String msg) {
+//                showToast(msg);
+//            }
+//
+//            @Override
+//            public void onPrintFailed(String errorCode, String errorMessage) {
+//                showToast(errorMessage);
+//            }
+//        });
     }
 
 
@@ -350,34 +350,34 @@ public class PrintTestActivityNew extends Activity implements View.OnClickListen
     }
 
     private void printTest() {
-        PrinterManager.getInstance().addPrintContent(new TestPrintDataAnalysis(this, "print test content"));
-//        PrinterManager.getInstance().printContent(this, new TestPrintDataAnalysis(this, "print test content"), new AbstractPrintStatus() {
-//
-//            @Override
-//            public void onPrintFinished(String finshCode, String msg) {
-//                Log.e(TAG, "onPrintFinished: "+msg );
-//                showToast(msg);
-//            }
-//
-//            @Override
-//            public void onPrintFailed(String errorCode, String errorMessage) {
-//                Log.e(TAG, "onPrintFailed: "+errorMessage );
-//                showToast(errorMessage);
-//            }
-//
-//            @Override
-//            public void onConnectFailed(String errorCode, String errorMessage) {
-//                super.onConnectFailed(errorCode, errorMessage);
-//                showToast(errorMessage);
-//            }
-//
-//            @Override
-//            public void onPrinterInitFailed(String errorCode, String errorMessage) {
-//                super.onPrinterInitFailed(errorCode, errorMessage);
-//                showToast(errorMessage);
-//            }
-//
-//        });
+//        PrinterManager.getInstance().addPrintContent(new TestPrintDataAnalysis(this, "print test content"));
+        PrinterManager.getInstance().printContent(this, new TestPrintDataAnalysis(this, "print test content"), new AbstractPrintStatus() {
+
+            @Override
+            public void onPrintFinished(String finshCode, String msg) {
+                Log.e(TAG, "onPrintFinished: "+msg );
+                showToast(msg);
+            }
+
+            @Override
+            public void onPrintFailed(String errorCode, String errorMessage) {
+                Log.e(TAG, "onPrintFailed: "+errorMessage );
+                showToast(errorMessage);
+            }
+
+            @Override
+            public void onConnectFailed(String errorCode, String errorMessage) {
+                super.onConnectFailed(errorCode, errorMessage);
+                showToast(errorMessage);
+            }
+
+            @Override
+            public void onPrinterInitFailed(String errorCode, String errorMessage) {
+                super.onPrinterInitFailed(errorCode, errorMessage);
+                showToast(errorMessage);
+            }
+
+        });
     }
 
     @Override

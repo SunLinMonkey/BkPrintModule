@@ -398,13 +398,21 @@ public class PrintCmd {
      * @return
      */
     public static String openBluetoothBox(){
+        return new String(openBluetoothBoxByte());
+    }
+
+    /**
+     * 蓝色商米开钱箱
+     * @return
+     */
+    public static  byte[]  openBluetoothBoxByte(){
         byte[] openCashbox = new byte[5];
         openCashbox[0] = 0x10;
         openCashbox[1] = 0x14;
         openCashbox[2] = 0x00;
         openCashbox[3] = 0x00;
         openCashbox[4] = 0x00;
-        return new String(openCashbox);
+        return openCashbox;
     }
 
     /**

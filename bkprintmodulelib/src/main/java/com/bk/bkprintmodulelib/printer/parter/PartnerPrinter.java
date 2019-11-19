@@ -72,7 +72,10 @@ public class PartnerPrinter extends BasePrinter implements IPrinter {
 
     @Override
     public void printQRCode(String content) {
+        getLocalTextSize();
+        getLocalGravity();
         print2DBarcode(content);
+        printBlankLine(2);
     }
 
 
@@ -229,7 +232,7 @@ public class PartnerPrinter extends BasePrinter implements IPrinter {
      * @return 排列
      */
     public static String gravity(int gravity) {
-        byte gravityByte = 0;
+        byte gravityByte;
 
         switch (gravity) {
             case TextGravity.GRAVITY_LEFT:

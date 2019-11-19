@@ -6,6 +6,7 @@ import android.widget.Toast;
 
 
 import com.bk.bkprintmodulelib.cosntants.EncodingFormat;
+import com.bk.bkprintmodulelib.cosntants.PrintCmd;
 import com.bk.bkprintmodulelib.cosntants.StatusConstans;
 import com.bk.bkprintmodulelib.cosntants.TextGravity;
 import com.bk.bkprintmodulelib.cosntants.TextSize;
@@ -19,6 +20,7 @@ import com.bk.bkprintmodulelib.printer.BasePrinter;
 import com.starmicronics.stario.PortInfo;
 import com.starmicronics.starioextension.ICommandBuilder;
 import com.starmicronics.starioextension.StarIoExt;
+import com.starmicronics.starioextension.StarIoExtManager;
 
 import java.nio.charset.Charset;
 import java.util.List;
@@ -29,6 +31,8 @@ public class StartWIFIPrinter extends BasePrinter implements IPrinter {
     private PrinterSettings settings;
     private ICommandBuilder builder;
 
+    private StarIoExtManager mStarIoExtManager;
+    private  Context context;
     @Override
     public void initPrintDriver(Context context, AbstractPrintStatus listener) {
         StarIoExt.Emulation emulation = ModelCapability.getEmulation(settings.getModelIndex());
@@ -48,6 +52,7 @@ public class StartWIFIPrinter extends BasePrinter implements IPrinter {
             return;
         }
         listener.onConnectSucceed(StatusConstans.Code.SUCCESS, "");
+        this.context =context;
     }
 
     @Override
@@ -184,7 +189,6 @@ public class StartWIFIPrinter extends BasePrinter implements IPrinter {
 
     @Override
     public void openCashBox() {
-
     }
 
     @Override
@@ -309,4 +313,7 @@ public class StartWIFIPrinter extends BasePrinter implements IPrinter {
     protected void getLocalGravity() {
         getLocalGravity(getHelpEntity().getGrivaty());
     }
+
+
+
 }

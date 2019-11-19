@@ -3,6 +3,7 @@ package com.bk.bkprintmodulelib.printer.summi;
 import android.content.Context;
 import android.graphics.Bitmap;
 
+import com.bk.bkprintmodulelib.PrinterManager;
 import com.bk.bkprintmodulelib.cosntants.StatusConstans;
 import com.bk.bkprintmodulelib.cosntants.TextGravity;
 import com.bk.bkprintmodulelib.cosntants.TextSize;
@@ -50,7 +51,7 @@ public class SummiPrinter extends BasePrinter implements IPrinter {
 
     @Override
     public void initPrintConnection(final Context context, final AbstractPrintStatus listener) {
-        SummiAidlUtil.getInstance().connectPrinterService(context, new ConnectionCallBack() {
+        SummiAidlUtil.getInstance().connectPrinterService(PrinterManager.getInstance().getRegistApplication(), new ConnectionCallBack() {
             @Override
             public void onSucceed() {
                 listener.onConnectSucceed(StatusConstans.Code.SUCCESS,"");
